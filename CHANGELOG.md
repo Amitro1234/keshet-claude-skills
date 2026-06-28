@@ -7,6 +7,25 @@ Owner: AI Architecture (Amit Rosen, CIO division)
 
 ---
 
+## [2.1.1] — June 2026
+
+### Fixed
+
+- `tools/validate-skills.ps1` — re-saved as UTF-8 **with BOM**. Without it, Windows
+  PowerShell 5.1 (the Builder default) read the file under a non-UTF-8 ANSI codepage and
+  failed to parse on the em-dash / box-drawing characters, so the validator could not run
+  at all. Now runs clean on PS 5.1 (18 skills, 119 checks, 0 failures).
+- `company-agent-guardrails/SKILL.md` — completed the truncated "Recommended Default
+  Stance" section (was cut off mid-word at "destructive system comm"); now lists full
+  Deny / Ask / Monitor stances. Removed a duplicated Purpose paragraph.
+
+### Added
+
+- `.github/workflows/validate-skills.yml` — CI workflow running the validator on every PR
+  and push to `main` via GitHub-hosted `pwsh`. Closes the "CI not wired in" known gap.
+
+---
+
 ## [2.1.0] — June 2026
 
 ### Changed (structural quality pass — all 15 skills updated)

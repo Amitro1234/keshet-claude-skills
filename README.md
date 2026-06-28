@@ -131,7 +131,7 @@ That's it. Claude Code picks up the skills automatically on the next session.
 
 ## Known gaps / future work
 
-- **CI validation:** `tools/validate-skills.ps1` must currently be run manually before merging a PR. A GitHub Actions workflow that runs the validator automatically on every PR is the obvious next step — not yet wired in.
+- **CI validation:** `tools/validate-skills.ps1` runs automatically on every PR via `.github/workflows/validate-skills.yml` (GitHub-hosted `pwsh`). It can also be run locally — on Windows PowerShell 5.1 the script must stay UTF-8-with-BOM (it contains non-ASCII characters that PS 5.1 misreads under a non-UTF-8 ANSI codepage otherwise), or run it under `pwsh`.
 - **Incident response contacts:** `docs/incident-response.md` has placeholder `[fill in]` entries for CISO and Legal escalation contacts. These must be filled in before the document is useful in a real P1.
 - **Pricing freshness:** model cost figures in `model-router/SKILL.md` and `global.CLAUDE.md` are hardcoded. Review them quarterly alongside the Anthropic pricing page.
 
