@@ -346,18 +346,28 @@ Before advancing from Step 5 to Step 6 (Spec Approval):
 === SPEC PACK REVIEW — [Project Name] ===
 PRD: [COMPLETE / MISSING: list]
 Technical Spec: [COMPLETE / MISSING: list]
-Acceptance Criteria: [COMPLETE / MISSING: list]
-Ready for Step 6 (Champion Approval): [YES / NO — list blocking items]
-
-VERDICT: [PASS — ready for Step 6 / FAIL — list all blocking items]
-```
-
----
+Acceptance Criteria: [COMPLETE 
 
 ## What NOT to do
 
 - Do not start writing code before the Spec Pack is approved at Step 6
 - Do not write Acceptance Criteria that are not testable ("the app should be fast")
 - Do not skip the Technical Spec for "small" projects — scope always grows
-- Do not leave out Out of Scope — it is the most important section for preventing rework
+- Do not leave Out of Scope blank — it is the most important section for preventing rework
 - Do not write the Spec Pack alone — the PRD must be validated by the Champion/Owner before Step 6
+- Do not use vague problem statements ("we need a better process") — be specific and quantified
+
+
+---
+
+## Review Output
+
+```
+=== SPEC PACK REVIEW — [Project Name] ===
+PRD: [COMPLETE / MISSING: list]
+Technical Spec: [COMPLETE / MISSING: list]
+Acceptance Criteria: [COMPLETE / MISSING: list]
+Ready for Step 6 (Champion Approval): [YES / NO — list blocking items]
+
+VERDICT: [PASS — ready for Step 6 / FAIL — list blocking items]
+```

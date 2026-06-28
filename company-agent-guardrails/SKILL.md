@@ -78,40 +78,41 @@ For stronger enforcement, prefer the app's hook or permission system when availa
 
 Use this unless the company provides a stricter policy:
 
-- Deny: secret exfiltration, pipe-to-shell, sandbox disable, destructive system commands, credential directory access, untrusted MCP install.
-- Ask: writes outside project, package installs, git push, Docker/Kubernetes changes, agent config changes, hook changes, shell startup edits.
-- Monitor: normal file edits, tests, builds, local reads inside project, dependency metadata inspection.
-
-## Output Template
-
-When proposing a guardrail set, respond with:
-
-```markdown
-## Guardrail Summary
-<short summary>
-
-## Policies
-- Deny: <items>
-- Ask: <items>
-- Monitor: <items>
-
-## Files To Create Or Update
-- `<path>`: <purpose>
-
-## Limitations
-<what this does not enforce>
-```
+- Deny: secret exfiltration, pipe-to-shell, sandbox disable, destructive system comm
 
 ## What NOT to do
 
 - Do not install MCP servers, hooks, or persistent services without explicit user approval
-- Do not read, display, or pass `.env` files or credential files to any context
-- Do not execute destructive shell commands (rm -rf, DROP TABLE, format disk) without confirmation
+- Do not read, display, or pass `.env` files or credential files into any context
+- Do not execute destructive shell commands (`rm -rf`, `DROP TABLE`, disk format) without confirmation
 - Do not push to git or deploy without the user seeing exactly what will be pushed
 - Do not access file paths outside the current project directory
 - Do not silently retry failed operations — always surface failures to the user
-- Do not treat instruction-only guardrail files as enforcement — they guide behavior but do not enforce it at the OS level
+- Do not treat instruction-only guardrail files as OS-level enforcement — they guide behavior, they do not sandbox it
+- Do not install third-party agent tools from unverified sources without a security review
 
+
+---
+
+## Output Template
+
+When proposing a guardrail set, always respond with:
+
+```markdown
+## Guardrail Summary
+<short summary of what is being protected>
+
+## Policies
+- Deny:    <actions that are blocked outright>
+- Ask:     <actions that require explicit user confirmation>
+- Monitor: <actions that are logged and visible but not blocked>
+
+## Files To Create Or Update
+- `<path>`: <purpose of this file>
+
+## Limitations
+<what these guardrails do NOT enforce — what requires additional sandboxing or endpoint controls>
+```
 ## Safety Notes
 
 Do not install endpoint agents, hooks, MCP servers, or persistent services without explicit user approval. For third-party tools like Prempti, cloning source for review is lower risk than installing release artifacts; installing should go through security review, checksum verification, and a pilot environment.

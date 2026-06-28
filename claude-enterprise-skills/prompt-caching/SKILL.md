@@ -151,21 +151,17 @@ and reuse across all subsequent items within the same run.
 
 Sonnet 4.6 pricing (per 1M tokens):
 - Input (no cache): $3.00
-- Cache write: $3.75 (25% premium — amortized after 2+ reads)
-- Cache read: $0.30 (90% discount)
-
-Scenario: 50K-token Spec Pack, read 200 times in one day by a Builder team:
-- Without caching: 200 × 50K × $3.00/M = **$30.00/day**
-- With caching: (1 × 50K × $3.75/M) + (199 × 50K × $0.30/M) = $0.19 + $2.99 = **$3.18/day**
-- Daily saving: **$26.82** → Monthly saving: **~$590**
-
----
+- Cache write: $3.75 (25% premium — amortized after 2+ read
 
 ## What NOT to do
 
 - Do not mark dynamic content (user queries, timestamps, per-request IDs) as cached
-- Do not place the cache block after the dynamic content — cache invalidates immediately
-- Do not cache content shorter than 1,024 tokens — no discount applies
+- Do not place the cache block after the dynamic content — the cache invalidates immediately
+- Do not cache content shorter than 1,024 tokens — no discount applies below this threshold
+- Do not assume caching is automatic — it must be explicitly declared in the API call
+- Do not cache sensitive PII or credentials inside shared system prompts
+- Do not attempt to apply this skill in Cowork or Chat — caching is managed automatically there
+ter than 1,024 tokens — no discount applies
 - Do not assume caching is automatic — it must be explicitly declared in the API call
 - Do not cache sensitive PII or credentials inside shared system prompts
 

@@ -118,19 +118,16 @@ Batch job estimate:
 | Task type | Model |
 |---|---|
 | Classification, tagging, routing | `claude-haiku-4-5-20251001` |
-| Extraction, summarization, translation | `claude-haiku-4-5-20251001` |
-| Code review, complex reasoning | `claude-sonnet-4-6` |
-| Architecture decisions, security audit | Do NOT batch — requires human-in-the-loop |
-
----
+| Extraction, summarization, translation | `cla
 
 ## What NOT to do
 
-- Do not route batch-eligible jobs through the synchronous API without flagging it
-- Do not use `claude-opus-4-7` for batch jobs — never justified at scale
+- Do not route batch-eligible jobs through the synchronous API without flagging it first
+- Do not use `claude-opus-4-8` for batch jobs — never justified at scale
 - Do not set `max_tokens` to the model maximum for jobs that need short outputs
-- Do not submit a batch job without a `custom_id` strategy — you will not be able to
-  join results back to your source data
+- Do not submit a batch job without a `custom_id` strategy — results cannot be joined back to source data
+- Do not run batch jobs on tasks that require real-time human responses
+- Do not skip the cost estimate before submitting — always show projected saving first
 
 ---
 

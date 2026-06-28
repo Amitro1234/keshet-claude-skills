@@ -49,7 +49,24 @@ Activate this skill when any of the following applies:
 
 ---
 
-## Session Start Protocol
+## Platform Detection — Run First
+
+Before applying any memory protocol, detect the environment:
+
+```
+IF running in Claude Code CLI with a project directory:
+  → use the Standard Protocol below (.claude/memory/ files)
+
+IF running in Cowork WITH a connected/mounted folder:
+  → use the Cowork Protocol below (memory files in the connected folder)
+
+IF running in Cowork WITHOUT a connected folder, OR in Claude.ai Chat:
+  → use the In-Conversation Protocol below (no files — summary block only)
+```
+
+---
+
+## Standard Protocol (Claude Code CLI)
 
 **Run this at the start of every session on a Builder project.**
 
@@ -99,6 +116,88 @@ Mark all three memory files for prompt caching (they are small, stable, and read
 
 ---
 
+## Cowork Protocol (Cowork with connected folder)
+
+When running in Cowork with a mounted/connected folder, use that folder instead of `.claude/memory/`.
+
+### Step 1: Check for memory folder
+
+Look for `memory/` or `.claude/memory/` inside the connected folder. If not found:
+```
+Memory folder not found in your connected folder.
+Creating: [connected-folder]/memory/ with decisions.md, session-log.md, project-state.md
+```
+
+### Step 2: Load and summarize (same as Standard Protocol)
+
+Read the three files and produce the session briefing — same format as Standard Protocol.
+
+### Step 3: Save at session end
+
+At session end, write updates to the same files in the connected folder.
+Remind the user to commit or back up the folder if it is not already version-controlled:
+```
+Session memory saved to: [connected-folder]/memory/
+Tip: if this folder is not in git, consider backing it up or moving to a git repo.
+```
+
+---
+
+## In-Conversation Protocol (Cowork without folder, or Chat)
+
+When there is no file system available, maintain memory within the conversation using structured blocks.
+
+### Session Start
+
+At the start of the conversation, ask:
+```
+Do you have context from a previous session on this project?
+If yes, paste your previous session summary and I'll pick up from there.
+If no, let's start fresh — tell me what we're building and where you are in the Builder Flow.
+```
+
+### During Session — Capture decisions inline
+
+When a significant decision is made, output a clearly marked block:
+```
+📌 DECISION RECORDED
+Title: [short title]
+Decision: [what was decided]
+Context: [why]
+Alternatives: [what else was considered]
+Owner: [who decided]
+```
+
+### Session End — Produce a portable summary
+
+At session end, produce a summary block the user can copy and paste into a doc, ticket, or the next conversation:
+
+```
+╔══════════════════════════════════════════╗
+║  SESSION SUMMARY — [Project Name]        ║
+║  [YYYY-MM-DD HH:MM]                      ║
+╠══════════════════════════════════════════╣
+║ BUILDER FLOW STEP: [N — step name]       ║
+║ LAST GATE PASSED:  [step, date]          ║
+║ NEXT GATE:         [step name]           ║
+╠══════════════════════════════════════════╣
+║ WHAT WAS DONE                            ║
+║  • [task completed]                      ║
+║  • [task completed]                      ║
+╠══════════════════════════════════════════╣
+║ DECISIONS                                ║
+║  • [decision title — 1 line]             ║
+╠══════════════════════════════════════════╣
+║ OPEN ITEMS FOR NEXT SESSION              ║
+║  □ [item — owner]                        ║
+║  □ [item — owner]                        ║
+╚══════════════════════════════════════════╝
+
+→ Paste this block at the start of your next conversation to restore context.
+```
+
+---
+
 ## During-Session Protocol: Capturing Decisions
 
 Whenever a significant decision is made during a session, capture it immediately.
@@ -136,7 +235,7 @@ Announce when writing: "Recording decision to memory: [title]."
 - Session has run for >15 minutes
 - More than 10 tool calls were made
 - A Builder Flow gate was crossed
-- The user says "done", "wrap up", "end session", "that's it for today"
+- The user says "done", "wrap up", "end session", or "that's it for today"
 
 ### Step 1: Write session summary to session-log.md
 
@@ -150,7 +249,6 @@ Prepend a new entry (keep the last 10 entries, compress older ones):
 **Builder Flow step at end:** [N]
 
 **What was done:**
-- [bullet: completed task]
 - [bullet: completed task]
 
 **Decisions made:** (see decisions.md for full entries)
@@ -180,7 +278,6 @@ Gate requirements remaining:
 
 ## Open Items
 - [ ] [item — who owns it]
-- [ ] [item — who owns it]
 
 ## Current Focus
 [One paragraph: what is being built right now, where it's headed]
@@ -200,7 +297,7 @@ Date: [date]
 Duration: ~[N] minutes · Tool calls: [N]
 
 Memory files updated:
-✅ decisions.md — [N new decisions recorded / no new decisions]
+✅ decisions.md — [N new decisions / no new decisions]
 ✅ session-log.md — [session summary written]
 ✅ project-state.md — [updated to current state]
 
@@ -285,6 +382,8 @@ git commit -m "memory: session [date] — [1-line summary]"
 
 - Do not put credentials, API keys, or secrets in any memory file
 - Do not put PII (names, emails, employee data) in memory files
-- Do not skip the session start briefing — it prevents repeated work
-- Do not let session-log.md grow unbounded — keep last 10 sessions only
-- Do not overwrite decisions.md — only append; decisions are a permanent record
+- Do not skip the session start briefing — it prevents repeated work and lost context
+- Do not let `session-log.md` grow unbounded — keep the last 10 sessions only
+- Do not overwrite `decisions.md` — only append; decisions are a permanent record
+- Do not skip committing memory files at session end — without a commit, the memory is lost
+- Do not use the Standard Protocol in Cowork without a connected folder — use the In-Conversation Protocol instead

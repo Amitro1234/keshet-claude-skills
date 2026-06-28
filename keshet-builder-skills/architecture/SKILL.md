@@ -156,7 +156,7 @@ Decisions requiring an ADR:
 
 ---
 
-## Anti-Patterns — Hard Prohibitions
+## What NOT to do
 
 | Anti-pattern | Why it's prohibited |
 |---|---|
@@ -179,30 +179,17 @@ Before advancing from Step 7 (Build) to Step 8 (Validation):
 - [ ] Layered architecture enforced — no cross-layer violations
 - [ ] All technology choices match org standards or have an ADR
 - [ ] No prohibited anti-patterns present
-- [ ] External integrations go through a client class, not inline
+- [ ] External integrations go through a dedicated client class in src/data/
 - [ ] MCP tool calls are logged and limited to approved tools
 - [ ] Project follows the standard folder structure
-- [ ] `CLAUDE.md` present at project root with active skills listed
+- [ ] CLAUDE.md present at project root with active skills listed
 
-Output format:
 ```
 === ARCHITECTURE REVIEW — [App Name] ===
 Category: [Local Demo / Department Tool / Production]
 Layers: [PASS / VIOLATIONS: list]
 Technology: [PASS / DEVIATIONS: list with ADR reference]
 Anti-patterns: [NONE / FOUND: list]
+
 VERDICT: [PASS / NEEDS REVISION]
 ```
-
----
-
-## What NOT to do
-
-- Do not apply production-grade complexity (microservices, event sourcing) to a Department Tool
-- Do not put business logic in API routes — it becomes untestable
-- Do not access the database directly from the UI or presentation layer
-- Do not use `print()` as logging in any environment — use a structured logger
-- Do not choose a technology without a documented rationale (ADR or Spec Pack note)
-- Do not deviate from the standard project folder structure without recording it in the Spec Pack
-- Do not call external APIs inline in business logic — always through a dedicated client class
-- Do not use SQLite in any shared or production environment

@@ -203,12 +203,23 @@ Before advancing from Step 7 (Build) to Step 8 (Validation):
 - [ ] `CLAUDE.md` present and complete (all required sections filled)
 - [ ] `README.md` present and written for the end user / maintainer
 - [ ] All public functions have docstrings
-- [ ] No unexplained magic numbers or constants
-- [ ] All TODO items have owner and issue reference
-- [ ] API / MCP tools documented
-- [ ] Runbook present (Production apps only)
+- [ ] No unexplained magic numbers or constan
 
-Output format:
+## What NOT to do
+
+- Do not write CLAUDE.md and then never update it — it must reflect the current state of the project
+- Do not write comments that describe what the code is obviously doing ("increment counter")
+- Do not leave TODO comments without an owner and an issue reference
+- Do not write a README aimed at developers when the primary users are non-technical
+- Do not skip the runbook for Production apps — ops cannot respond to incidents without it
+- Do not document the API only in your head — every endpoint needs a written contract
+- Do not use "see the code" as documentation — code shows what; documentation explains why
+
+
+---
+
+## Review Output
+
 ```
 === DOCUMENTATION REVIEW — [App Name] ===
 CLAUDE.md: [COMPLETE / MISSING SECTIONS: list]
@@ -216,17 +227,6 @@ README.md: [COMPLETE / MISSING SECTIONS: list]
 Inline docs: [PASS / ISSUES: list]
 API docs: [COMPLETE / MISSING: list]
 Runbook: [COMPLETE / NOT REQUIRED / MISSING]
+
 VERDICT: [PASS / NEEDS REVISION]
 ```
-
----
-
-## What NOT to do
-
-- Do not write CLAUDE.md and then never update it — it must reflect the current state of the project
-- Do not write comments that describe what the code is obviously doing ("increment counter")
-- Do not leave TODO comments without an owner and issue reference
-- Do not write a README aimed at developers when the users are non-technical — know your audience
-- Do not skip the runbook for Production apps — ops cannot respond to incidents without it
-- Do not document the API only in your head — every endpoint needs a written contract
-- Do not use "see the code" as documentation — the code shows what, documentation explains why

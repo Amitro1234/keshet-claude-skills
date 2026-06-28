@@ -154,6 +154,45 @@ Set the model via slash command if needed:
 
 ---
 
+## Mid-Session Model Switch Protocol
+
+Models cannot be switched automatically mid-task. When scope escalates during a session, follow this protocol by platform:
+
+### Claude Code CLI
+
+1. Stop work. Announce the escalation:
+   ```
+   ESCALATION: Task scope changed — this now requires Tier [N] (was Tier [N-1]).
+   Reason: [what changed — e.g., "bug is in the auth layer, production-critical"]
+   Action required: please run /model claude-[model] to switch, then type "continue".
+   ```
+2. Wait for the user to run the slash command.
+3. Resume only after the model switch is confirmed.
+
+### Cowork
+
+1. Stop work. Announce:
+   ```
+   ESCALATION: This task needs a heavier model (Tier [N]).
+   Action: click the model picker (top of the chat) → select [Opus 4.8 / Sonnet 4.6].
+   Then start a new message to continue — I'll pick up from where we left off.
+   ```
+2. At the start of the next message, re-state the context and continue.
+
+### Claude.ai Chat
+
+Same as Cowork — model selection is in the UI picker. Announce the escalation, ask the user to switch, then continue in the next message.
+
+### When NOT to escalate mid-session
+
+If the escalation is minor (Tier 1 → Tier 2 only) and the remaining work is small (<5 tool calls), continue with the current model and note the cost difference:
+```
+Minor escalation: continuing with Sonnet instead of Haiku for this step.
+Estimated additional cost: ~$0.002 — acceptable for this task size.
+```
+
+---
+
 ## Quick Reference
 
 ```
@@ -213,56 +252,15 @@ When this skill is active, Claude must:
 
 ---
 
-## Escalation Examples
-
-| User Request | Initial Tier | Escalated? | Reason |
-|---|---|---|---|
-| "Run pytest and show failures" | 1 | No | Pure execution |
-| "Fix this TypeError in utils.py" | 2 | No | Standard bug fix |
-| "Fix TypeError — turns out it's in the auth layer" | 2→3 | Yes | Touched auth, production-critical |
-| "Add docstring to this function" | 1 | No | Trivial |
-| "Design our SharePoint connector" | 3 | No | Greenfield |
-| "Deploy to staging" | 1 | No | Execution |
-| "Something's wrong in prod — logs show 500s" | 2→3 | Yes | Production issue, unclear root cause |
-
----
-
-## Integration with Other Org Skills
-
-Stack this skill with the rest of the Keshet Enterprise Skills:
-
-```
-1. model-router        → pick the cheapest capable model
-2. context-hygiene     → trim context before sending
-3. prompt-caching      → mark stable prefix for 90% discount
-4. output-discipline   → govern response format and length
-5. batch-detector      → route async jobs to Batch API (50% off)
-6. agentic-loop-guard  → enforce checkpoints and hard stops
-```
-
----
-
-## Overriding Per-Session
-
-Override anytime with a slash command:
-```
-/model claude-haiku-4-5-20251001
-/model claude-sonnet-4-6
-/model claude-opus-4-8
-```
-
-Or instruct explicitly: "Use Haiku for this task" / "Switch to Opus for the architecture section."
-
----
-
 ## What NOT to do
 
-- Do not default to Tier 2 (Sonnet) for tasks that are clearly Tier 1 execution
-- Do not use Tier 3 (Opus) for standard bug fixes or routine code writing
-- Do not skip announcing the model and tier before starting work
-- Do not silently escalate to a heavier model — always announce and confirm
-- Do not apply Tier 3 to batch or pipeline jobs — use `batch-detector` skill instead
+- Do not default to Tier 2 (Sonnet) for tasks that are clearly Tier 1 execution (file reads, lint, grep)
+- Do not use Tier 3 (Opus) for standard bug fixes, routine code writing, or test generation
+- Do not skip announcing the model and tier before starting work — always state it
+- Do not silently escalate to a heavier model mid-task — always announce and confirm with the user
+- Do not apply Tier 3 to batch or pipeline jobs — use the `batch-detector` skill instead
 - Do not use `/model` in Cowork or Chat — select the model from the UI model picker instead
+- Do not assume the most expensive model produces better results for simple tasks
 
 ---
 

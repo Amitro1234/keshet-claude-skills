@@ -225,26 +225,7 @@ pytest tests/integration/    # integration tests against real test DB
 Before Step 10 (Stage→Prod gate):
 ```bash
 pytest -v                    # full suite must pass clean
-# No skipped tests without documented reason
-# No xfail tests that have been failing for >2 weeks
-```
-
----
-
-## Test Review Checklist
-
-```
-=== TEST REVIEW — [App Name] ===
-Unit test coverage: [N]% (required: ≥80%)
-API routes covered: [N/N routes]
-Error paths tested: [PASS / MISSING: list]
-Mocking discipline: [PASS / ISSUES: list]
-Test isolation: [PASS / ISSUES: list]
-All tests passing: [YES / FAILURES: list]
-VERDICT: [PASS / NEEDS REVISION]
-```
-
----
+# No sk
 
 ## What NOT to do
 
@@ -254,5 +235,22 @@ VERDICT: [PASS / NEEDS REVISION]
 - Do not share mutable state between tests — tests must be independent and runnable in any order
 - Do not call real external APIs (email, SMS, payment, MCP tools) in tests — mock them
 - Do not skip writing tests because "it's just a small change" — bugs hide in small changes
-- Do not merge code with failing tests — fix the tests or the code, never skip
+- Do not merge code with failing tests — fix the code or the test, never skip
 - Do not use `xfail` as a permanent state — it means "known broken" and must be resolved
+
+
+---
+
+## Review Output
+
+```
+=== TEST REVIEW — [App Name] ===
+Unit test coverage: [N]% (required: ≥80%)
+API routes covered: [N/N routes]
+Error paths tested: [PASS / MISSING: list]
+Mocking discipline: [PASS / ISSUES: list]
+Test isolation: [PASS / ISSUES: list]
+All tests passing: [YES / FAILURES: list]
+
+VERDICT: [PASS / NEEDS REVISION]
+```

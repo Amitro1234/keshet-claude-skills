@@ -158,12 +158,25 @@ Before advancing from Step 7 (Build) to Step 8 (Validation):
 - [ ] No natural keys used as primary keys
 - [ ] Correct data types used (no FLOAT for money, no TIMESTAMP without TZ)
 - [ ] All foreign keys indexed
-- [ ] All schema changes delivered as numbered migration files
-- [ ] Rollback plan documented for each migration
-- [ ] No dangerous migrations without approval
-- [ ] PII columns identified and flagged
+- [ ] All schema changes delivered as numbered
 
-Output format:
+## What NOT to do
+
+- Do not use natural keys (email, phone, external ID) as primary keys — they change over time
+- Do not use `FLOAT` for money or financial values — use `NUMERIC(19,4)`
+- Do not use `TIMESTAMP` without timezone — always use `TIMESTAMPTZ`
+- Do not use `VARCHAR(255)` — use `TEXT` (no performance difference in PostgreSQL)
+- Do not use `ON DELETE CASCADE` unless child data is truly meaningless without the parent
+- Do not add a `NOT NULL` column to a large existing table without a default — it locks the table
+- Do not rename columns without a migration plan — it breaks all queries using the old name
+- Do not run schema changes directly in Production — always via a numbered migration file
+- Do not store production data in Dev or Stage databases — use anonymized fixtures
+
+
+---
+
+## Review Output
+
 ```
 === DB STRUCTURE REVIEW — [App Name] ===
 Tables reviewed: [list]
@@ -172,19 +185,6 @@ Data types: [PASS / ISSUES: list]
 Indexes: [PASS / MISSING: list]
 Migrations: [PASS / ISSUES: list]
 Security: [PASS / FLAGS: list]
+
 VERDICT: [PASS / NEEDS REVISION]
 ```
-
----
-
-## What NOT to do
-
-- Do not use natural keys (email, phone, external ID) as primary keys — they change
-- Do not use `FLOAT` for money or financial values — use `NUMERIC(19,4)`
-- Do not use `TIMESTAMP` without timezone — always use `TIMESTAMPTZ`
-- Do not use `VARCHAR(255)` — use `TEXT` (PostgreSQL has no performance difference)
-- Do not use `ON DELETE CASCADE` unless child data is truly meaningless without the parent
-- Do not add a `NOT NULL` column to a large existing table without a default value — it locks the table
-- Do not rename columns without a migration plan — it breaks all queries using the old name
-- Do not run schema changes directly in Production — always via a numbered migration file
-- Do not store production data in Dev or Stage databases — use anonymized fixtures

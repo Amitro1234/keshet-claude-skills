@@ -117,18 +117,14 @@ When running as an autonomous agent (Claude Code with tool use):
 
 ## Cost Rationale
 
-Output tokens on Claude Sonnet 4.6 cost $15 per million (vs. $3 for input).
-A developer writing full-file rewrites instead of diffs can generate 3–5x more
-output tokens than necessary for the same task.
-
-Enforcing diffs alone can reduce output token usage by 40–60% on typical coding sessions.
-
----
+O
 
 ## What NOT to do
 
-- Never rewrite a file that only needed a small change
-- Never repeat the user's question or task description at the start of a response
-- Never add a summary section at the end that repeats what was just said
-- Never generate example usage or test cases unless explicitly asked
-- Never generate more than one implementation of the same thing unless asked for alternatives
+- Do not rewrite a file that only needed a small change — output diffs, not full files
+- Do not repeat the user's question or task description at the start of a response
+- Do not add a summary section at the end that repeats what was just said
+- Do not generate example usage or test cases unless explicitly asked
+- Do not generate more than one implementation of the same thing unless asked for alternatives
+- Do not pad responses with "Great question!", "Let me know if you need anything else", or similar
+- Do not output boilerplate comments that describe what the code obviously does

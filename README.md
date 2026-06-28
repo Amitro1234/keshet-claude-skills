@@ -129,6 +129,14 @@ That's it. Claude Code picks up the skills automatically on the next session.
 
 ---
 
+## Known gaps / future work
+
+- **CI validation:** `tools/validate-skills.ps1` must currently be run manually before merging a PR. A GitHub Actions workflow that runs the validator automatically on every PR is the obvious next step — not yet wired in.
+- **Incident response contacts:** `docs/incident-response.md` has placeholder `[fill in]` entries for CISO and Legal escalation contacts. These must be filled in before the document is useful in a real P1.
+- **Pricing freshness:** model cost figures in `model-router/SKILL.md` and `global.CLAUDE.md` are hardcoded. Review them quarterly alongside the Anthropic pricing page.
+
+---
+
 ## Cost impact (estimated, 20 Builders)
 
 | Optimization | Mechanism | Saving |

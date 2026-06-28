@@ -218,11 +218,24 @@ Before advancing from Step 7 (Build) to Step 8 (Validation):
 - [ ] No PII, passwords, or tokens in any log statement
 - [ ] All required audit events have audit trail entries (see table above)
 - [ ] Audit entries include all required fields (actor, action, resource, result, timestamp)
-- [ ] Audit entries written to append-only store (not a standard CRUD table)
-- [ ] `trace_id` propagated through request chain
-- [ ] Log routing configured (not just `print()` to stdout)
+- [ ] Audit entries written to append-only store (not a standard CRUD tabl
 
-Output format:
+## What NOT to do
+
+- Do not conflate application logs and audit trail entries — they serve different purposes and audiences
+- Do not write audit entries to a standard CRUD table that can be updated or deleted
+- Do not log PII (names, emails, phone numbers, IDs) in any log statement
+- Do not log credentials, tokens, or API keys — even partially
+- Do not use `print()` as the logging mechanism in any environment
+- Do not disable DEBUG logging by commenting it out — use log level configuration
+- Do not route audit entries only to local disk — use the org's centralized SIEM or audit store
+- Do not omit the `trace_id` — without it, distributed request tracing is impossible
+
+
+---
+
+## Review Output
+
 ```
 === AUDIT & LOGGING REVIEW — [App Name] ===
 Structured logging: [PASS / ISSUES: list]
@@ -230,19 +243,8 @@ Log level discipline: [PASS / ISSUES: list]
 PII in logs: [NONE FOUND / FOUND: locations]
 Audit events covered: [N/N required events]
 Audit schema: [COMPLETE / MISSING FIELDS: list]
-Audit storage: [APPEND-ONLY / STANDARD TABLE (must fix)]
+Audit storage: [APPEND-ONLY / STANDARD TABLE — must fix]
+
 VERDICT: [PASS / NEEDS REVISION]
-```
-
----
-
-## What NOT to do
-
-- Do not conflate application logs and audit trail entries — they serve different purposes and audiences
-- Do not write audit entries to a standard CRUD table that can be updated or deleted
-- Do not log PII (names, emails, phone numbers, IDs) in any log statement
-- Do not log credentials, tokens, or API keys — even partially ("sk-...")
-- Do not use `print()` as the logging mechanism in any environment
-- Do not disable DEBUG logging by commenting it out — use log level configuration
-- Do not route audit entries only to local disk — use the org's centralized SIEM or audit store
+```ntralized SIEM or audit store
 - Do not omit the `trace_id` — without it, distributed request tracing is impossible
