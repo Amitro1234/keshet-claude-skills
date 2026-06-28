@@ -1,0 +1,151 @@
+# [PROJECT NAME] — CLAUDE.md
+# Instructions: replace all [PLACEHOLDERS] before committing
+# Delete this comment block when done
+
+---
+
+## Project Overview
+
+**What it does:** [1–3 sentences: what this app does, who uses it, what problem it solves]
+
+**Category:** [Local Demo / Department Tool / Production]
+
+**Champion/Owner:** [name, role]
+**Builder:** [name]
+**Created:** [date]
+**Last updated:** [date]
+
+---
+
+## Data Classification
+
+**Level:** [🟢 Public / 🟡 Internal / 🔴 Confidential]
+
+**What data this app handles:**
+- [data type 1]
+- [data type 2]
+
+**🔴 If Confidential:** DLP active: [yes/no] · CISO notified: [yes/no] · Legal review: [yes/no]
+
+---
+
+## Architecture
+
+**Stack:** [language/runtime, framework, DB, cloud provider]
+
+**Layer overview:**
+```
+[Presentation]  ← [what's here: API routes / UI / MCP tools]
+[Business Logic] ← [what's here: domain services, rules]
+[Data Access]    ← [what's here: DB models, external API clients]
+[Infrastructure] ← [config, logging, secrets, monitoring]
+```
+
+**Key technology decisions:**
+- [choice]: [1-line rationale]
+
+**External integrations:**
+| Service | Purpose | Connector |
+|---|---|---|
+| [service] | [what for] | [MCP connector / REST client] |
+
+---
+
+## Active Skills
+
+The following Keshet skills are mandatory for this project.
+Run each skill at the indicated trigger — do not wait to be asked.
+
+<!-- Skills path (macOS/Linux): ~/.claude/skills/keshet-claude-skills -->
+<!-- Skills path (Windows):     %USERPROFILE%\.claude\skills\keshet-claude-skills -->
+
+### Always active
+- Model routing:     ~/.claude/skills/keshet-claude-skills/claude-enterprise-skills/model-router-skill/SKILL.md
+- Context hygiene:   ~/.claude/skills/keshet-claude-skills/claude-enterprise-skills/context-hygiene/SKILL.md
+- Output discipline: ~/.claude/skills/keshet-claude-skills/claude-enterprise-skills/output-discipline/SKILL.md
+- Prompt caching:    ~/.claude/skills/keshet-claude-skills/claude-enterprise-skills/prompt-caching/SKILL.md
+- Agentic loop guard:~/.claude/skills/keshet-claude-skills/claude-enterprise-skills/agentic-loop-guard/SKILL.md
+- Guardrails:        ~/.claude/skills/keshet-claude-skills/company-agent-guardrails/SKILL.md
+
+### Trigger at Spec Pack (Step 5)
+- Spec Pack:         ~/.claude/skills/keshet-claude-skills/keshet-builder-skills/spec-pack/SKILL.md
+
+### Trigger at Build (Step 7) and gates (Steps 8, 10)
+- Security:          ~/.claude/skills/keshet-claude-skills/keshet-builder-skills/security/SKILL.md
+- Architecture:      ~/.claude/skills/keshet-claude-skills/keshet-builder-skills/architecture/SKILL.md
+- DB Structure:      ~/.claude/skills/keshet-claude-skills/keshet-builder-skills/db-structure/SKILL.md  [if DB exists]
+- Code Review:       ~/.claude/skills/keshet-claude-skills/keshet-builder-skills/code-review/SKILL.md
+- Documentation:     ~/.claude/skills/keshet-claude-skills/keshet-builder-skills/documentation/SKILL.md
+- Unit Test:         ~/.claude/skills/keshet-claude-skills/keshet-builder-skills/unit-test/SKILL.md
+- Audit & Logging:   ~/.claude/skills/keshet-claude-skills/keshet-builder-skills/audit-logging/SKILL.md
+- Memory:            ~/.claude/skills/keshet-claude-skills/keshet-builder-skills/memory/SKILL.md
+
+### Trigger at Stage deployment (Step 9) and Prod Gate (Step 10)
+- Deployment:        ~/.claude/skills/keshet-claude-skills/keshet-builder-skills/deployment/SKILL.md
+
+### Trigger at Production (Step 11)
+- Monitoring:        ~/.claude/skills/keshet-claude-skills/keshet-builder-skills/monitoring-alerting/SKILL.md
+
+---
+
+## Key Commands
+
+```bash
+# Run locally
+[command]
+
+# Run tests
+[command]
+
+# Run linter
+[command]
+
+# Deploy to Stage
+[command]
+```
+
+---
+
+## Environment Variables
+
+| Variable | Purpose | Where to get it |
+|---|---|---|
+| `[VAR_NAME]` | [what it does] | [Vault / team lead / IT] |
+
+See `.env.example` for the full list. Never commit real values.
+
+---
+
+## Current Builder Flow Status
+
+**Current step:** [1–11 — e.g. "7 — Build"]
+**Last gate passed:** [step name + date — e.g. "Step 6 — Spec Approval, 2026-06-28"]
+**Next gate:** [step name — e.g. "Step 8 — Validation Sandbox"]
+**Open items:**
+- [ ] [item]
+
+---
+
+## Memory
+
+Memory files are in `.claude/memory/`. Claude loads them at session start.
+
+- `.claude/memory/decisions.md` — architectural decisions log
+- `.claude/memory/session-log.md` — compressed history of recent sessions
+- `.claude/memory/project-state.md` — current build status and open items
+
+---
+
+## Known Limitations / Deferred Scope
+
+- [limitation 1]
+- [limitation 2]
+
+---
+
+## Spec Pack Reference
+
+Spec Pack ticket: [link to Monday/Jira ticket]
+PRD: [link]
+Technical Spec: [link]
+Acceptance Criteria: [link]

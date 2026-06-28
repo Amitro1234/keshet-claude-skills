@@ -1,0 +1,28 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Secrets — never commit
+.env
+.env.*
+*.pem
+*.key
+secrets/
+
+# Node (if any tooling is added)
+node_modules/
+
+# Python (if any tooling is added)
+__pycache__/
+*.pyc
+.venv/
+
+# Logs
+*.log

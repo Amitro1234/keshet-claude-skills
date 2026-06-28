@@ -1,0 +1,133 @@
+# .claudeignore — Keshet Standard Template
+# Copy this file to your project root as .claudeignore
+# Claude Code will exclude these paths from context automatically
+# See: claude-enterprise-skills/context-hygiene/SKILL.md
+#
+# Owner: AI Architecture (Amit Rosen)
+# Last updated: June 2026
+
+# ─── Dependencies ────────────────────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+vendor/
+.venv/
+venv/
+env/
+__pypackages__/
+
+# ─── Build outputs ───────────────────────────────────────────────────────────
+dist/
+build/
+out/
+.next/
+.nuxt/
+.svelte-kit/
+.output/
+*.min.js
+*.min.css
+*.bundle.js
+*.bundle.css
+
+# ─── Source maps & binary assets ─────────────────────────────────────────────
+*.map
+*.wasm
+*.bin
+*.pyc
+*.pyo
+__pycache__/
+*.egg-info/
+*.egg
+
+# ─── Media & static assets ───────────────────────────────────────────────────
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.webp
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.pdf
+*.zip
+*.tar.gz
+*.tgz
+
+# ─── Lock files (never useful in context) ────────────────────────────────────
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+poetry.lock
+Pipfile.lock
+Gemfile.lock
+composer.lock
+
+# ─── Secrets and credentials (NEVER include) ─────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+secrets/
+credentials/
+.aws/
+.azure/
+kubeconfig
+*.kubeconfig
+*.tfvars
+!*.tfvars.example
+
+# ─── Coverage and test output ────────────────────────────────────────────────
+coverage/
+.coverage
+htmlcov/
+.pytest_cache/
+junit.xml
+test-results/
+.nyc_output/
+
+# ─── Editor and OS noise ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*.orig
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ─── Database files (local dev only) ─────────────────────────────────────────
+*.sqlite
+*.sqlite3
+*.db
+
+# ─── Terraform state (can contain secrets) ───────────────────────────────────
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# ─── Docker layer cache ──────────────────────────────────────────────────────
+.dockerignore
+
+# ─── Migration output (large, rarely useful in context) ──────────────────────
+# Uncomment if your migrations folder is very large and rarely relevant:
+# migrations/versions/
+
+# ─── Generated API clients ───────────────────────────────────────────────────
+# Uncomment if you generate SDK/client code from OpenAPI specs:
+# generated/
+# src/generated/
