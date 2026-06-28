@@ -28,8 +28,6 @@ This skill is **always active** for any AI agent session. Activate explicitly wh
 
 ---
 
-Use this skill to create practical guardrails for AI coding agents across desktop apps and CLIs. The goal is to reduce accidental harm and improve visibility, not to claim sandbox-grade security.
-
 ## First Principles
 
 1. Identify the action surface: shell commands, file reads/writes, git operations, MCP calls, package installs, hooks, skills, or secrets.
@@ -78,7 +76,9 @@ For stronger enforcement, prefer the app's hook or permission system when availa
 
 Use this unless the company provides a stricter policy:
 
-- Deny: secret exfiltration, pipe-to-shell, sandbox disable, destructive system comm
+- **Deny:** secret exfiltration, pipe-to-shell (`curl ... | sh`), sandbox/permission disable, destructive system commands (recursive delete, disk format, history wipe), and access to credential stores.
+- **Ask:** git push/force-push, deploys, package installs, schema changes, writes outside the project directory, and any MCP tool call not on the org-approved list.
+- **Monitor:** all shell command execution, file writes inside the project, and external API calls — logged and visible, not blocked.
 
 ## What NOT to do
 

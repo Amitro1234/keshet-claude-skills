@@ -1,4 +1,4 @@
-# validate-skills.ps1
+﻿# validate-skills.ps1
 # Structural validator for keshet-claude-skills
 # Run from the repo root: .\tools\validate-skills.ps1
 # Checks every SKILL.md for required structure and produces a pass/fail report.
