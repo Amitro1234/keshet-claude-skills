@@ -20,6 +20,11 @@ violations of org standards.
 **Who runs this review:** Claude runs the automated portion. A human Champion/Owner
 performs the final approval before Stage→Prod (Step 10).
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — Claude reads files directly and can run linting/analysis
+> - Cowork: ✅ Full support — review applies with connected folder or pasted code
+> - Claude.ai Chat: ✅ Supported — paste code or diffs into the conversation for a full 5-dimension review
+
 ---
 
 ## Trigger Conditions

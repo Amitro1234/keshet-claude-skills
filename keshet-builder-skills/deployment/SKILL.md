@@ -20,6 +20,11 @@ repeatable deployment checklist that catches these issues before they become inc
 1. **Stage** — required before Validation Sandbox (Step 9)
 2. **Production** — required after Stage→Prod gate approval (Step 10, Champion sign-off)
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — Claude can execute pre-flight commands (`pytest`, `alembic`, `curl /health`) directly
+> - Cowork: ✅ Full support — deployment checklist and sign-off formats apply; run commands separately in terminal
+> - Claude.ai Chat: ✅ Supported — use checklist as a guide; run all commands in your terminal and paste results for sign-off review
+
 ---
 
 ## Trigger Conditions

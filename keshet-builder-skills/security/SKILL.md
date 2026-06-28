@@ -19,6 +19,11 @@ Stage→Production gate (Step 10).
 This is a **mandatory skill** — it runs on every Builder session, not only when the
 user requests it.
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — can run `npm audit`, `pip-audit`, and grep for secrets directly
+> - Cowork: ✅ Full support — review and checklist apply; run audit commands separately in terminal
+> - Claude.ai Chat: ✅ Supported — paste code for review; run audit commands separately
+
 ---
 
 ## Trigger Conditions

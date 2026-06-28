@@ -22,6 +22,11 @@ This skill enforces two distinct concerns:
 
 Both are mandatory. They serve different consumers and must not be conflated.
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — Claude can inspect log configuration, write structured logger setup, and verify audit entries
+> - Cowork: ✅ Full support — review and logging checklist apply with connected folder
+> - Claude.ai Chat: ✅ Supported — paste log output or logging code for review and standards check
+
 ---
 
 ## Trigger Conditions
@@ -218,7 +223,7 @@ Before advancing from Step 7 (Build) to Step 8 (Validation):
 - [ ] No PII, passwords, or tokens in any log statement
 - [ ] All required audit events have audit trail entries (see table above)
 - [ ] Audit entries include all required fields (actor, action, resource, result, timestamp)
-- [ ] Audit entries written to append-only store (not a standard CRUD tabl
+- [ ] Audit entries written to append-only store (not a standard CRUD table that can be updated or deleted)
 
 ## What NOT to do
 
@@ -246,5 +251,4 @@ Audit schema: [COMPLETE / MISSING FIELDS: list]
 Audit storage: [APPEND-ONLY / STANDARD TABLE — must fix]
 
 VERDICT: [PASS / NEEDS REVISION]
-```ntralized SIEM or audit store
-- Do not omit the `trace_id` — without it, distributed request tracing is impossible
+```

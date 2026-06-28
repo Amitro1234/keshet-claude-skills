@@ -22,6 +22,11 @@ how it will be built, and how anyone can verify it was built correctly.
 
 **Rule:** No code is written until the Spec Pack is approved by the Champion/Owner (Step 6).
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — Claude writes Spec Pack files directly into `docs/spec/`
+> - Cowork: ✅ Full support — spec generation works in conversation; save output to connected folder
+> - Claude.ai Chat: ✅ Supported — Claude generates all three documents in conversation; copy into your ticket system (Monday/Jira)
+
 ---
 
 ## Trigger Conditions
@@ -339,14 +344,6 @@ Before advancing from Step 5 to Step 6 (Spec Approval):
 - [ ] At least one AC per error/edge case
 - [ ] Non-functional AC covers performance, security, and logging
 - [ ] Each AC is verifiable — "user sees a success message" is not verifiable; "HTTP 201 with `{ id, status }` is returned" is
-
-**Output format:**
-
-```
-=== SPEC PACK REVIEW — [Project Name] ===
-PRD: [COMPLETE / MISSING: list]
-Technical Spec: [COMPLETE / MISSING: list]
-Acceptance Criteria: [COMPLETE 
 
 ## What NOT to do
 

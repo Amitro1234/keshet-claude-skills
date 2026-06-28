@@ -17,6 +17,11 @@ confidently deployed, and cannot be maintained by anyone other than the original
 Every Keshet Builder application must have a working test suite before it can
 advance past Step 8 (Agent Validation Sandbox).
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — Claude can write, run, and fix tests directly (`pytest`, `npm test`)
+> - Cowork: ✅ Full support — test writing and review apply; run tests separately in your terminal
+> - Claude.ai Chat: ✅ Supported — paste existing tests or code; Claude writes new tests and explains failures
+
 ---
 
 ## Trigger Conditions

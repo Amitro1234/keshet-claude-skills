@@ -23,6 +23,11 @@ any single agentic session from consuming disproportionate budget.
 Applies to: all Claude Code users running multi-step agent workflows, all automated
 pipelines, all MCP-connected agents.
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — tool call counting is precise; hard stops and checkpoints apply exactly
+> - Cowork: ✅ Applies when using agentic tasks or MCP tools; checkpoint and retry rules apply
+> - Claude.ai Chat: ⚠️ Partial — fully autonomous multi-step loops are less common; retry guard and cost awareness still apply when Claude is performing multi-step reasoning
+
 ---
 
 ## Trigger Conditions

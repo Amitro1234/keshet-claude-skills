@@ -118,7 +118,9 @@ Batch job estimate:
 | Task type | Model |
 |---|---|
 | Classification, tagging, routing | `claude-haiku-4-5-20251001` |
-| Extraction, summarization, translation | `cla
+| Extraction, summarization, translation | `claude-haiku-4-5-20251001` (upgrade to Sonnet if output quality is insufficient) |
+| Code review, security scan (CI/CD) | `claude-sonnet-4-6` |
+| Complex reasoning, multi-step analysis | `claude-sonnet-4-6` |
 
 ## What NOT to do
 

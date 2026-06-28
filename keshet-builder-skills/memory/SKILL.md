@@ -20,6 +20,11 @@ This skill enforces a structured memory system using three files in `.claude/mem
 These files are committed to the repo so memory is shared across machines and survives
 session restarts.
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — Standard Protocol (file-based memory in `.claude/memory/`)
+> - Cowork: ✅ Supported — Cowork Protocol (memory files in connected folder); see Platform Detection section
+> - Claude.ai Chat: ✅ Supported — In-Conversation Protocol (structured summary blocks, no files needed); see Platform Detection section
+
 ---
 
 ## Memory Files

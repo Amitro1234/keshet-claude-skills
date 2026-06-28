@@ -151,7 +151,13 @@ and reuse across all subsequent items within the same run.
 
 Sonnet 4.6 pricing (per 1M tokens):
 - Input (no cache): $3.00
-- Cache write: $3.75 (25% premium — amortized after 2+ read
+- Cache write: $3.75 (25% premium — amortized after 2+ reads)
+- Cache read: $0.30 (90% cheaper than input)
+
+Example: 10K-token Spec Pack, 20 requests/day:
+- Without caching: 10K × 20 × $3.00/M = $0.60/day → $180/year
+- With caching: 1 write at $0.038 + 19 reads × $0.003 = $0.095/day → $29/year
+- Saving: ~84%
 
 ## What NOT to do
 
@@ -161,9 +167,6 @@ Sonnet 4.6 pricing (per 1M tokens):
 - Do not assume caching is automatic — it must be explicitly declared in the API call
 - Do not cache sensitive PII or credentials inside shared system prompts
 - Do not attempt to apply this skill in Cowork or Chat — caching is managed automatically there
-ter than 1,024 tokens — no discount applies
-- Do not assume caching is automatic — it must be explicitly declared in the API call
-- Do not cache sensitive PII or credentials inside shared system prompts
 
 ---
 

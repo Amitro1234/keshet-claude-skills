@@ -16,6 +16,11 @@ causes production incidents, data loss, and expensive migrations years later.
 This skill enforces consistent, safe, and maintainable database design across all
 Keshet Builder applications.
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — can inspect schema files, run migrations, and check DB state directly
+> - Cowork: ✅ Full support — review and DB checklist apply with connected folder
+> - Claude.ai Chat: ✅ Supported — paste schema definitions or migration files for review
+
 ---
 
 ## Trigger Conditions

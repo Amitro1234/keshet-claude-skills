@@ -44,8 +44,12 @@ Load and apply them at the relevant trigger points — do not wait to be asked.
 - Model routing:     `~/.claude/skills/keshet-claude-skills/claude-enterprise-skills/model-router-skill/SKILL.md`
 - Context hygiene:   `~/.claude/skills/keshet-claude-skills/claude-enterprise-skills/context-hygiene/SKILL.md`
 - Output discipline: `~/.claude/skills/keshet-claude-skills/claude-enterprise-skills/output-discipline/SKILL.md`
-- Prompt caching:    `~/.claude/skills/keshet-claude-skills/claude-enterprise-skills/prompt-caching/SKILL.md`
 - Agentic loop guard:`~/.claude/skills/keshet-claude-skills/claude-enterprise-skills/agentic-loop-guard/SKILL.md`
+
+### FinOps (pipeline/automation builders only)
+These skills apply when building API integrations, automations, or bulk-processing pipelines.
+They do not apply to interactive coding sessions.
+- Prompt caching:    `~/.claude/skills/keshet-claude-skills/claude-enterprise-skills/prompt-caching/SKILL.md`
 - Batch detector:    `~/.claude/skills/keshet-claude-skills/claude-enterprise-skills/batch-detector/SKILL.md`
 
 ### Builder Gates (trigger at relevant Build Flow steps)

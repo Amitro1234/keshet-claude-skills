@@ -19,6 +19,11 @@ platform must be documented well enough that:
 3. The Champion/Owner can verify that behavior matches the spec
 4. Compliance can audit what the system does and what data it handles
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — Claude can read and write all documentation files directly
+> - Cowork: ✅ Full support — documentation generation and review work with connected folder
+> - Claude.ai Chat: ✅ Supported — ask Claude to draft or review any documentation; paste existing docs for gap analysis
+
 **Rule of thumb:** If you left the company today, could another Builder pick this up
 tomorrow? If not, the documentation is incomplete.
 

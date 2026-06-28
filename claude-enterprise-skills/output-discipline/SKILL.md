@@ -17,6 +17,11 @@ without reducing quality.
 
 Applies to: all Claude Code users, all Cowork users, all chat users.
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support
+> - Cowork: ✅ Full support
+> - Claude.ai Chat: ✅ Full support
+
 ---
 
 ## Trigger Conditions
@@ -117,7 +122,14 @@ When running as an autonomous agent (Claude Code with tool use):
 
 ## Cost Rationale
 
-O
+Output tokens cost **5× more** than input tokens (Sonnet 4.6: $3/M input vs. $15/M output).
+Every unnecessary output token — padding, full-file rewrites, unsolicited alternatives — is
+real money at team scale.
+
+A team of 20 Builders, each generating 20% fewer output tokens through discipline:
+- Baseline output spend: ~$6/day × 20 = $120/day → $30,000/year
+- After output discipline: ~$96/day → $24,000/year
+- Saving: ~$6,000/year from formatting rules alone — zero reduction in quality
 
 ## What NOT to do
 

@@ -23,6 +23,11 @@ application reaches Production.
 Both are required. An app with monitoring but no alerts means humans check dashboards
 manually. An app with alerts but no monitoring means alerts fire without context.
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — Claude can inspect monitoring config, write health check code, and generate alert definitions
+> - Cowork: ✅ Full support — monitoring review and SLO definitions apply with connected folder
+> - Claude.ai Chat: ✅ Supported — describe your stack; Claude generates SLO definitions, alert configs, and the health check endpoint
+
 ---
 
 ## Trigger Conditions

@@ -18,6 +18,11 @@ from the start — not after code review in production.
 **Default stance:** When in doubt, choose the simplest architecture that meets the
 requirement. Do not over-engineer. A department tool does not need microservices.
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — can inspect folder structure and run linting directly
+> - Cowork: ✅ Full support — review and architecture checklist apply with connected folder
+> - Claude.ai Chat: ✅ Supported — paste architecture diagrams, code structure, or design questions
+
 ---
 
 ## Trigger Conditions

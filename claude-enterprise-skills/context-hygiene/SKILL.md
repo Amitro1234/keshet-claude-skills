@@ -15,6 +15,11 @@ description: >
 Enforce context discipline across the organization to prevent token bloat.
 This skill runs **before any long session or multi-file task** and must not be skipped.
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — `.claudeignore` file scoping, per-file limits, and history compression all apply
+> - Cowork: ✅ Applies — use a connected folder for `.claudeignore`; context discipline and history compression work in-conversation
+> - Claude.ai Chat: ⚠️ Partial — steps 2 and 3 (file exclusions, per-file limits) are advisory; paste only relevant code sections and compress history manually
+
 ---
 
 ## Trigger Conditions
