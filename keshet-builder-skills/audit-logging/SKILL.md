@@ -24,6 +24,20 @@ Both are mandatory. They serve different consumers and must not be conflated.
 
 ---
 
+## Trigger Conditions
+
+Activate this skill when any of the following applies:
+- Any code writes log statements of any kind
+- A user action creates, updates, or deletes data
+- An admin operation is performed (provisioning, config change, spend cap change)
+- An authentication or authorization event occurs
+- An MCP tool call is made by an AI agent
+- An external API integration is added
+- Advancing from Step 7 (Build) to Step 8 (Validation Sandbox)
+- Advancing to Production (Step 10 gate)
+
+---
+
 ## Two Types of Logs
 
 | Type | Purpose | Consumer | Retention | Mutability |
@@ -219,3 +233,16 @@ Audit schema: [COMPLETE / MISSING FIELDS: list]
 Audit storage: [APPEND-ONLY / STANDARD TABLE (must fix)]
 VERDICT: [PASS / NEEDS REVISION]
 ```
+
+---
+
+## What NOT to do
+
+- Do not conflate application logs and audit trail entries — they serve different purposes and audiences
+- Do not write audit entries to a standard CRUD table that can be updated or deleted
+- Do not log PII (names, emails, phone numbers, IDs) in any log statement
+- Do not log credentials, tokens, or API keys — even partially ("sk-...")
+- Do not use `print()` as the logging mechanism in any environment
+- Do not disable DEBUG logging by commenting it out — use log level configuration
+- Do not route audit entries only to local disk — use the org's centralized SIEM or audit store
+- Do not omit the `trace_id` — without it, distributed request tracing is impossible

@@ -22,6 +22,17 @@ repeatable deployment checklist that catches these issues before they become inc
 
 ---
 
+## Trigger Conditions
+
+Activate this skill when any of the following applies:
+- The user says "deploy", "push to staging", "go to prod", or "release"
+- The Builder is advancing to Step 9 (Stage deployment)
+- The Champion/Owner has signed off and the Builder is advancing to Step 10 (Stage→Prod gate)
+- A rollback is being considered or executed
+- A smoke test needs to be run after deployment
+
+---
+
 ## Pre-Flight Checklist (run before every deployment)
 
 ### Check 1: Tests pass cleanly

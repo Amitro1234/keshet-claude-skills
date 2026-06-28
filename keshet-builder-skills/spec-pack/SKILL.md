@@ -24,6 +24,20 @@ how it will be built, and how anyone can verify it was built correctly.
 
 ---
 
+## Trigger Conditions
+
+Activate this skill when any of the following applies:
+- A new project or feature is being started
+- The user says "let's write the spec", "what should we build", or "start the project"
+- The Builder is at Step 5 in the Builder Flow
+- Code is about to be written but no Spec Pack exists yet
+- The Champion/Owner asks what will be built
+
+**Hard rule:** No code is written until the Spec Pack is complete and approved at Step 6.
+If the user tries to start coding without a Spec Pack, stop and run this skill first.
+
+---
+
 ## Three Documents in a Spec Pack
 
 | Document | Owner | Audience | Gate |
@@ -334,6 +348,8 @@ PRD: [COMPLETE / MISSING: list]
 Technical Spec: [COMPLETE / MISSING: list]
 Acceptance Criteria: [COMPLETE / MISSING: list]
 Ready for Step 6 (Champion Approval): [YES / NO — list blocking items]
+
+VERDICT: [PASS — ready for Step 6 / FAIL — list all blocking items]
 ```
 
 ---

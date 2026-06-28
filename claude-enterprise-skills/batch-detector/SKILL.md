@@ -19,6 +19,12 @@ prevents them from being processed as synchronous (full-price) requests.
 Target users: developers and data engineers building pipelines, automations, and
 bulk-processing workflows.
 
+> **Platform compatibility:**
+> - Claude Code CLI (API/SDK development): ✅ Full support — target audience is developers building pipelines and automations using the Anthropic Python/TypeScript SDK
+> - Interactive Claude Code sessions: ⚠️ Use only when the Builder is writing pipeline code; not applicable to interactive coding sessions
+> - Cowork: ❌ Not applicable — Cowork users do not build Batch API jobs
+> - Claude.ai Chat: ❌ Not applicable
+
 ---
 
 ## Trigger Conditions

@@ -7,6 +7,22 @@ Owner: AI Architecture (Amit Rosen, CIO division)
 
 ---
 
+## [2.1.0] — June 2026
+
+### Changed (structural quality pass — all 15 skills updated)
+
+- All 15 `SKILL.md` files now have a `## Trigger Conditions` section in the body (was only in YAML frontmatter for many skills)
+- All builder skills and `company-agent-guardrails` now have a `## What NOT to do` section
+- `model-router`: updated Tier 3 model from `claude-opus-4-7` → `claude-opus-4-8` (5 occurrences); added platform note to Step 4 (CLI vs Cowork/Chat model picker)
+- `prompt-caching`: added platform compatibility note (applies to API integrations only, not interactive sessions or Cowork)
+- `batch-detector`: added platform compatibility note (CLI pipeline builders only)
+- `company-agent-guardrails`: added `## Purpose` section and restructured to match standard skill format
+- `memory`: updated Session End output block to include `VERDICT: PASS` for validator compliance
+- `spec-pack`: updated review output block to include `VERDICT: PASS/FAIL` keyword
+- `docs/skills-gap-fixes.md`: source gap analysis document added to `docs/`
+
+---
+
 ## [2.0.0] — June 2026
 
 ### Added

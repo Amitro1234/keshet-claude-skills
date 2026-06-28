@@ -5,6 +5,29 @@ description: Draft, review, and refine app-agnostic company guardrails for AI co
 
 # Company Agent Guardrails
 
+## Purpose
+
+Define and enforce practical safety guardrails for AI coding agents across Keshet.
+These guardrails reduce accidental harm and improve visibility without blocking
+developer productivity. They apply to all agents operating in Claude Code, Cowork,
+and any pipeline or automation using Claude.
+
+The goal is not sandbox-grade security — it is to make dangerous actions visible
+and require explicit human confirmation before they execute.
+
+---
+
+## Trigger Conditions
+
+This skill is **always active** for any AI agent session. Activate explicitly when:
+- A new Claude Code session starts on any Keshet project
+- An agent is about to execute shell commands, git operations, or MCP tool calls
+- A user grants broad autonomy ("just handle it", "do it automatically")
+- A pipeline or automation is being designed or reviewed
+- Any action would touch secrets, credentials, or files outside the project directory
+
+---
+
 Use this skill to create practical guardrails for AI coding agents across desktop apps and CLIs. The goal is to reduce accidental harm and improve visibility, not to claim sandbox-grade security.
 
 ## First Principles
@@ -78,6 +101,16 @@ When proposing a guardrail set, respond with:
 ## Limitations
 <what this does not enforce>
 ```
+
+## What NOT to do
+
+- Do not install MCP servers, hooks, or persistent services without explicit user approval
+- Do not read, display, or pass `.env` files or credential files to any context
+- Do not execute destructive shell commands (rm -rf, DROP TABLE, format disk) without confirmation
+- Do not push to git or deploy without the user seeing exactly what will be pushed
+- Do not access file paths outside the current project directory
+- Do not silently retry failed operations — always surface failures to the user
+- Do not treat instruction-only guardrail files as enforcement — they guide behavior but do not enforce it at the OS level
 
 ## Safety Notes
 

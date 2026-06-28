@@ -20,6 +20,19 @@ requirement. Do not over-engineer. A department tool does not need microservices
 
 ---
 
+## Trigger Conditions
+
+Activate this skill when any of the following applies:
+- Designing a new service, module, or application from scratch
+- Choosing a technology stack or database
+- Designing an API or integration pattern
+- Structuring an existing codebase that has no clear layers
+- The user asks "how should I build this?" or "what architecture should I use?"
+- Advancing from Step 7 (Build) to Step 8 (Validation Sandbox)
+- Any deviation from standard org patterns is being considered
+
+---
+
 ## Application Categories and Architecture Fit
 
 Before writing a single line of code, classify the application:
@@ -180,3 +193,16 @@ Technology: [PASS / DEVIATIONS: list with ADR reference]
 Anti-patterns: [NONE / FOUND: list]
 VERDICT: [PASS / NEEDS REVISION]
 ```
+
+---
+
+## What NOT to do
+
+- Do not apply production-grade complexity (microservices, event sourcing) to a Department Tool
+- Do not put business logic in API routes — it becomes untestable
+- Do not access the database directly from the UI or presentation layer
+- Do not use `print()` as logging in any environment — use a structured logger
+- Do not choose a technology without a documented rationale (ADR or Spec Pack note)
+- Do not deviate from the standard project folder structure without recording it in the Spec Pack
+- Do not call external APIs inline in business logic — always through a dedicated client class
+- Do not use SQLite in any shared or production environment

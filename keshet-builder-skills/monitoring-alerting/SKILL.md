@@ -25,6 +25,17 @@ manually. An app with alerts but no monitoring means alerts fire without context
 
 ---
 
+## Trigger Conditions
+
+Activate this skill when any of the following applies:
+- An application is being prepared for Production deployment (Step 10 gate)
+- The user asks about SLOs, alerts, dashboards, or on-call rotation
+- A new Production service is going live
+- An existing Production service has no monitoring configured
+- Step 11 (Production Monitoring) begins — run the daily health check
+
+---
+
 ## Required Monitoring Layers
 
 Every Production application must implement all three layers before Step 10.

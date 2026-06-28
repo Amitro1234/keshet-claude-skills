@@ -21,7 +21,13 @@ Applies to: all Claude Code users, all Cowork users, all chat users.
 
 ## Trigger Conditions
 
-This skill is **always active**. It is not optional.
+This skill is **always active** for all Keshet users. It is not optional.
+
+Activate explicitly when:
+- Any file is being modified (diffs, not full rewrites)
+- A response to a question is being composed (keep it proportional)
+- An autonomous agent session is running (checkpoint every 10 tool calls)
+- A user asks for a code change, review, or explanation of any kind
 
 ---
 

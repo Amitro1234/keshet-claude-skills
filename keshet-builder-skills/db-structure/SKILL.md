@@ -18,6 +18,18 @@ Keshet Builder applications.
 
 ---
 
+## Trigger Conditions
+
+Activate this skill when any of the following applies:
+- A `CREATE TABLE` or schema definition is being written
+- An ORM model (SQLAlchemy, Prisma, Django models, etc.) is being defined
+- A migration file is being created or reviewed
+- A database access pattern, index, or query is being designed
+- The user asks any question about data storage design
+- Advancing from Step 7 (Build) to Step 8 (Validation Sandbox)
+
+---
+
 ## Naming Conventions
 
 All identifiers must follow these conventions — no exceptions:
@@ -162,3 +174,17 @@ Migrations: [PASS / ISSUES: list]
 Security: [PASS / FLAGS: list]
 VERDICT: [PASS / NEEDS REVISION]
 ```
+
+---
+
+## What NOT to do
+
+- Do not use natural keys (email, phone, external ID) as primary keys — they change
+- Do not use `FLOAT` for money or financial values — use `NUMERIC(19,4)`
+- Do not use `TIMESTAMP` without timezone — always use `TIMESTAMPTZ`
+- Do not use `VARCHAR(255)` — use `TEXT` (PostgreSQL has no performance difference)
+- Do not use `ON DELETE CASCADE` unless child data is truly meaningless without the parent
+- Do not add a `NOT NULL` column to a large existing table without a default value — it locks the table
+- Do not rename columns without a migration plan — it breaks all queries using the old name
+- Do not run schema changes directly in Production — always via a numbered migration file
+- Do not store production data in Dev or Stage databases — use anonymized fixtures

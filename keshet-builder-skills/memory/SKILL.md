@@ -37,6 +37,18 @@ Do not put credentials, PII, or sensitive data in memory files.
 
 ---
 
+## Trigger Conditions
+
+Activate this skill when any of the following applies:
+- A Claude Code session starts on any Builder project (always — session start briefing)
+- A significant architectural or technical decision is made during a session
+- A Builder Flow gate is crossed
+- The session has run for more than 15 minutes
+- More than 10 tool calls have been made
+- The user says "done", "wrap up", "end session", or "that's it for today"
+
+---
+
 ## Session Start Protocol
 
 **Run this at the start of every session on a Builder project.**
@@ -183,16 +195,24 @@ Gate requirements remaining:
 ### Step 3: Announce the summary
 
 ```
-=== SESSION END ===
+=== SESSION END REVIEW — [Project Name] ===
+Date: [date]
 Duration: ~[N] minutes · Tool calls: [N]
-Memory updated: decisions.md, session-log.md, project-state.md
-Committed to git? [yes / reminder to commit]
+
+Memory files updated:
+✅ decisions.md — [N new decisions recorded / no new decisions]
+✅ session-log.md — [session summary written]
+✅ project-state.md — [updated to current state]
 
 Key things done this session:
 - [bullet]
 
 Open for next session:
 - [bullet]
+
+Committed to git: [YES / REMINDER: run git add .claude/memory/ && git commit]
+
+VERDICT: PASS — session memory complete
 ```
 
 ---

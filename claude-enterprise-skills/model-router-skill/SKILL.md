@@ -29,13 +29,26 @@ reduces that to ~$85K — a saving of ~$45K without reducing quality.
 
 ---
 
+## Trigger Conditions
+
+This skill activates **before every task**, without exception.
+
+Activate explicitly when:
+- A new Claude Code session starts
+- The user asks Claude to perform any task (read, write, fix, run, review, design)
+- The scope of an in-progress task changes significantly
+- A Builder Flow gate is being crossed (Steps 6, 8, 10)
+- An agentic session begins (tool calls will be made autonomously)
+
+---
+
 ## Routing Table
 
 | Tier | Model | Cost (input/output per 1M) | Use When |
 |---|---|---|---|
 | **1 — Light** | `claude-haiku-4-5-20251001` | $0.80 / $4 | File reads, grep, lint, tests, bash, config parsing |
 | **2 — Standard** | `claude-sonnet-4-6` | $3 / $15 | Write code, fix bugs, refactor, test writing, debug, code review |
-| **3 — Heavy** | `claude-opus-4-7` | $15 / $75 | Architecture, security audit, greenfield design, threat modeling |
+| **3 — Heavy** | `claude-opus-4-8` | $15 / $75 | Architecture, security audit, greenfield design, threat modeling |
 
 > **Default when uncertain:** Tier 2 — `claude-sonnet-4-6`
 
@@ -126,14 +139,18 @@ Always state the routing decision before starting work:
 
 > "Task: run lint and show failures → **Tier 1**, using `claude-haiku-4-5-20251001`."
 > "Task: implement SharePoint connector module → **Tier 2**, using `claude-sonnet-4-6`."
-> "Task: security audit of API gateway → **Tier 3**, using `claude-opus-4-7`."
+> "Task: security audit of API gateway → **Tier 3**, using `claude-opus-4-8`."
 
 Set the model via slash command if needed:
 ```
 /model claude-haiku-4-5-20251001   # Tier 1
 /model claude-sonnet-4-6           # Tier 2
-/model claude-opus-4-7             # Tier 3
+/model claude-opus-4-8             # Tier 3
 ```
+
+> **Platform note:**
+> - **Claude Code CLI:** use `/model <model-string>` as shown above
+> - **Cowork / Claude.ai Chat:** select the model from the model picker in the UI (Opus 4.8 = Tier 3, Sonnet 4.6 = Tier 2, Haiku 4.5 = Tier 1). The slash command is not available outside Claude Code CLI.
 
 ---
 
@@ -142,7 +159,7 @@ Set the model via slash command if needed:
 ```
 TIER 1 — claude-haiku-4-5-20251001   → read, run, find, lint, format, check, diff
 TIER 2 — claude-sonnet-4-6           → write, fix, test, explain, refactor, debug, review, spec
-TIER 3 — claude-opus-4-7             → design, architect, audit, investigate, gate-decision
+TIER 3 — claude-opus-4-8             → design, architect, audit, investigate, gate-decision
 ```
 
 ---
@@ -231,10 +248,21 @@ Override anytime with a slash command:
 ```
 /model claude-haiku-4-5-20251001
 /model claude-sonnet-4-6
-/model claude-opus-4-7
+/model claude-opus-4-8
 ```
 
 Or instruct explicitly: "Use Haiku for this task" / "Switch to Opus for the architecture section."
+
+---
+
+## What NOT to do
+
+- Do not default to Tier 2 (Sonnet) for tasks that are clearly Tier 1 execution
+- Do not use Tier 3 (Opus) for standard bug fixes or routine code writing
+- Do not skip announcing the model and tier before starting work
+- Do not silently escalate to a heavier model — always announce and confirm
+- Do not apply Tier 3 to batch or pipeline jobs — use `batch-detector` skill instead
+- Do not use `/model` in Cowork or Chat — select the model from the UI model picker instead
 
 ---
 

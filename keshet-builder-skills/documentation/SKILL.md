@@ -24,6 +24,18 @@ tomorrow? If not, the documentation is incomplete.
 
 ---
 
+## Trigger Conditions
+
+Activate this skill when any of the following applies:
+- A new project is being started (CLAUDE.md needs to be created)
+- A feature or module is being completed
+- The user asks to "write docs", "update the README", or "document this"
+- Public functions or API endpoints are being added without docstrings
+- Advancing from Step 7 (Build) to Step 8 (Validation Sandbox)
+- A Production runbook is needed before Step 10
+
+---
+
 ## Documentation Layers
 
 Every application must have all applicable layers:
@@ -206,3 +218,15 @@ API docs: [COMPLETE / MISSING: list]
 Runbook: [COMPLETE / NOT REQUIRED / MISSING]
 VERDICT: [PASS / NEEDS REVISION]
 ```
+
+---
+
+## What NOT to do
+
+- Do not write CLAUDE.md and then never update it — it must reflect the current state of the project
+- Do not write comments that describe what the code is obviously doing ("increment counter")
+- Do not leave TODO comments without an owner and issue reference
+- Do not write a README aimed at developers when the users are non-technical — know your audience
+- Do not skip the runbook for Production apps — ops cannot respond to incidents without it
+- Do not document the API only in your head — every endpoint needs a written contract
+- Do not use "see the code" as documentation — the code shows what, documentation explains why

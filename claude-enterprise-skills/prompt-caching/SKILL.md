@@ -18,6 +18,26 @@ This skill ensures every session that can benefit from caching is structured cor
 
 Applies to: all Claude Code users, all API integrations, all agentic workflows.
 
+> **Platform compatibility:**
+> - Claude Code CLI (API integrations / pipelines): ✅ Full support
+> - Interactive Claude Code sessions: ⚠️ Caching is managed by Claude Code automatically — no manual setup needed
+> - Cowork: ❌ Not applicable — users do not control API parameters
+> - Claude.ai Chat: ❌ Not applicable
+
+---
+
+## Trigger Conditions
+
+Activate this skill when ALL of the following are true:
+- The session includes large static content (system prompt, Spec Pack, schema, SDK docs)
+- That content exceeds **1,024 tokens**
+- The same content will be sent to the model more than once (across turns or requests)
+
+**This skill is for API/SDK integrations only.**
+It does not apply to interactive Claude Code sessions, Cowork, or Claude.ai Chat —
+those environments manage caching automatically. Target audience: developers building
+pipelines, automations, or multi-turn API applications using the Anthropic SDK.
+
 ---
 
 ## When Caching Applies

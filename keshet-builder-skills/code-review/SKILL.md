@@ -22,6 +22,17 @@ performs the final approval before Stage→Prod (Step 10).
 
 ---
 
+## Trigger Conditions
+
+Activate this skill when any of the following applies:
+- The user asks to "review", "check", or "validate" any code
+- A git push or merge is about to happen
+- The Builder asks "is this ready?" or "can I advance to the next step?"
+- Advancing from Step 7 (Build) to Step 8 (Validation Sandbox)
+- Advancing from Stage to Production (Step 10 gate)
+
+---
+
 ## Review Dimensions
 
 Every code review covers all five dimensions. Missing any one means the review is incomplete.
