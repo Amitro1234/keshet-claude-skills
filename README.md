@@ -49,7 +49,7 @@ keshet-claude-skills/
 ### 1 — Clone this repo
 
 ```bash
-git clone https://github.com/keshet-tv/keshet-claude-skills.git ~/.claude/skills/keshet-claude-skills
+git clone https://github.com/Amitro1234/keshet-claude-skills.git ~/.claude/skills/keshet-claude-skills
 ```
 
 Or if installing globally on a Builder machine:
