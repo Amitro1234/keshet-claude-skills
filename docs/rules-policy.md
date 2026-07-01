@@ -36,6 +36,8 @@
 
 **מה זה אומר בפועל ל-FinOps Owner:** רוב ה-Rules בשכבה הזו הם עדיין Advisory. השליטה האמיתית שקיימת היום היא ברמת ה-Admin Panel (Spend Caps, MCP allowlist) — לא ברמת קובץ. המשמעות: התפקיד הקריטי כאן הוא לא "לכתוב Rule חכם יותר," אלא לוודא שה-Admin Panel בפועל מוגדר לפי המספרים שה-skills מניחים שהם קיימים (A2, A3) — כרגע יש חוסר וידוא בין המספרים הכתובים ב-skill לבין הקונפיגורציה בפועל.
 
+> ✅ **עודכן 2026-07-01, אחרי בדיקה ב-`platform.claude.com/docs/en/api/admin` ובמדריך ה-Spend Limits הרשמי:** ה-**Admin API** הכללי (ניהול users/workspaces/API keys/service accounts/invites) **זמין גם ב-Team**, לא רק Enterprise — אפשר לכתוב היום קוד שמנהל onboarding/offboarding, workspaces ו-API keys, בלי לחכות להחלטה #2. **אבל** ה-**Spend Limits API הספציפי** (הגדרת cap פר-user/פר-group בקוד, ותור אישור בקשות להעלאת cap) **בדוק ומאומת כ-Enterprise-only** — הקריאה עצמה מחזירה שגיאת 400 "this endpoint is not supported for this organization type" אם הארגון לא על Enterprise (ונדרש גם Usage Credits מופעל). ב-Team יש Spend Controls — אבל רק דרך ממשק ה-Console, לא API. זה משנה את A2: התקרות עדיין קיימות ב-Team, אבל **תחזוקה שלהן היום היא ידנית ב-UI, לא ניתנת לאוטומציה עד Enterprise**.
+
 ---
 
 ## 2. Rules ברמת User/Builder — 11 שערי ה-Builder Flow

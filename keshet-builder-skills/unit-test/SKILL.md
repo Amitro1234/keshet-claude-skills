@@ -230,7 +230,7 @@ pytest tests/integration/    # integration tests against real test DB
 Before Step 10 (Stage→Prod gate):
 ```bash
 pytest -v                    # full suite must pass clean
-# No sk
+# No skipped tests — @pytest.mark.skip is not allowed at this gate
 
 ## What NOT to do
 

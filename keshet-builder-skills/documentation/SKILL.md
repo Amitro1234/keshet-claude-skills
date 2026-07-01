@@ -208,7 +208,7 @@ Before advancing from Step 7 (Build) to Step 8 (Validation):
 - [ ] `CLAUDE.md` present and complete (all required sections filled)
 - [ ] `README.md` present and written for the end user / maintainer
 - [ ] All public functions have docstrings
-- [ ] No unexplained magic numbers or constan
+- [ ] No unexplained magic numbers or constants — extract to named constants with a comment explaining the value
 
 ## What NOT to do
 

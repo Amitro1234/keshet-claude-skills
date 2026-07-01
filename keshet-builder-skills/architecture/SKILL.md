@@ -127,11 +127,11 @@ Refer to `db-structure` skill for schema standards.
 - All external API calls go through a dedicated client class in `src/data/`
 - No direct `requests.get()` or `axios.get()` calls in business logic
 - Rate limits, retries, and timeouts must be configured — not left at defaults
-- Only connectors on the approved Keshet connector list are permitted without review
+- Only connectors on the approved Keshet connector list are permitted without review (see `docs/approved-mcp-connectors.md`)
 
 ### MCP / AI Integration
 
-- Only MCP tools from the org-approved list may be called
+- Only MCP tools from the org-approved list may be called (see `docs/approved-mcp-connectors.md`)
 - Every MCP tool call must be logged (who, when, what was passed)
 - AI-generated content must be labeled as such in any user-facing output
 

@@ -101,7 +101,7 @@ SECURITY CHECK — AUTH
 - [ ] No "admin by default" or "open by default" endpoints
 - [ ] Tokens expire — no eternal sessions
 - [ ] Failed authentication attempts are logged (but not with the attempted password)
-- [ ] MCP tools: only tools in the org-approved list are invoked
+- [ ] MCP tools: only tools in the org-approved connector list are invoked (see `docs/approved-mcp-connectors.md`)
 
 ### Check 5: Logging Safety
 

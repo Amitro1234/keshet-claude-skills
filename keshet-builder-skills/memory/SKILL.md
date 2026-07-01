@@ -371,9 +371,12 @@ None.
 
 ## git Commit Reminder
 
-Memory files must be committed to keep them shared and backed up.
+If the project is git-backed, memory files must be committed to keep them shared and
+backed up. If not (e.g. a Cowork connected folder with no git — see Cowork Protocol
+above), skip this section: remind the user the files exist only in the folder and
+won't have version history, but they still persist across sessions as plain files.
 
-At session end, if memory files were updated:
+At session end, if the project is git-backed and memory files were updated:
 ```
 Reminder: commit memory files to preserve this session's context.
 
@@ -390,5 +393,5 @@ git commit -m "memory: session [date] — [1-line summary]"
 - Do not skip the session start briefing — it prevents repeated work and lost context
 - Do not let `session-log.md` grow unbounded — keep the last 10 sessions only
 - Do not overwrite `decisions.md` — only append; decisions are a permanent record
-- Do not skip committing memory files at session end — without a commit, the memory is lost
+- If the project is git-backed, do not skip committing memory files at session end — without a commit, the memory is lost. If not git-backed (e.g. a Cowork connected folder), this does not apply — the files persist as plain files without version history
 - Do not use the Standard Protocol in Cowork without a connected folder — use the In-Conversation Protocol instead

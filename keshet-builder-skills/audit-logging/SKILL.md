@@ -207,7 +207,7 @@ unless those values are non-sensitive and explicitly required for the audit.
 | Requirement | Implementation |
 |---|---|
 | Log aggregation | Logs must route to the org's centralized logging system |
-| Alerting | ERROR and CRITICAL logs must trigger an alert (PagerDuty / Slack) |
+| Alerting | ERROR and CRITICAL logs must trigger an alert (PagerDuty / Slack). Escalate per the severity levels and contacts in `docs/incident-response.md`. |
 | Audit trail routing | Audit entries must route to the org's SIEM or compliance system |
 | Log access | Production logs: only Ops/Security roles can access — not all developers |
 | No local-only logs | Do not write to files on the server disk as the primary log — use structured output to stdout, collected by the infra |

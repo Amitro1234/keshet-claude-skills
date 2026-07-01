@@ -218,6 +218,10 @@ Define before going live:
 | HIGH | 30 minutes (business hours), 1 hour (after hours) | [Primary on-call] | → [Manager] |
 | MEDIUM | Next business day | [Builder] | — |
 
+Mapping into the org incident process (see `docs/incident-response.md` for severity
+definitions and escalation contacts): CRITICAL → treat as P1/P2, HIGH → P2/P3,
+MEDIUM → P3/P4. A firing alert should always have a clear path into that process.
+
 Write this table in `docs/runbook.md`.
 
 ---

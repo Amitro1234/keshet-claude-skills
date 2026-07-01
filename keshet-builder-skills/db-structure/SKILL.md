@@ -163,7 +163,7 @@ Before advancing from Step 7 (Build) to Step 8 (Validation):
 - [ ] No natural keys used as primary keys
 - [ ] Correct data types used (no FLOAT for money, no TIMESTAMP without TZ)
 - [ ] All foreign keys indexed
-- [ ] All schema changes delivered as numbered
+- [ ] All schema changes delivered as numbered migration files
 
 ## What NOT to do
 
