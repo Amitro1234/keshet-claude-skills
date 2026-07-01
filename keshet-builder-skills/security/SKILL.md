@@ -1,5 +1,5 @@
 ---
-name: keshet-security
+name: security
 description: >
   Mandatory security checklist for Keshet Builders. Run at every Build session (Step 7)
   and before every gate crossing (Steps 8, 10). Triggers on: any code that handles
@@ -184,3 +184,28 @@ are resolved and the security check is re-run.
 - Do not log errors that include the stack trace in Production (leaks internal structure)
 - Do not add secrets to `.env.example` files as "placeholder values" — use `YOUR_KEY_HERE`
 - Do not store secrets in Claude's context window or in Spec Pack documents
+
+---
+
+## Rationalizations — Excuse vs. Reality
+
+Violating the letter of these checks is violating the spirit of them — "I did most of it" is not a pass.
+
+| Excuse | Reality |
+|---|---|
+| "It's just a demo, not real users yet" | Demos get promoted to production without anyone re-running this skill. Run it now. |
+| "The key is only in a local `.env`, it's fine" | `.env` gets committed by accident constantly — that's the exact failure this check exists to catch. |
+| "I'll add auth later, ship the happy path first" | "Later" is after this gate has already passed. There is no scheduled re-check. |
+| "This data isn't that sensitive" | The classification table decides that, not the Builder's judgment call in the moment. |
+| "We're behind schedule, security can be fast-tracked" | A `BLOCK` verdict costs less than a Prod incident. Schedule pressure is not a control. |
+| "I already manually checked it, no need to run the checklist" | Manual review without the structured checklist is exactly how items 3 and 5 get missed. |
+
+## Red Flags — STOP and run the checklist
+
+- You're about to mark a check as passed without actually verifying it
+- You're thinking "I'll circle back to security after this ships"
+- You're tempted to hardcode a secret "just for testing" and remove it later
+- Someone says "we don't have time for the full checklist this time"
+- You're about to advance to Step 8 or Step 10 without a `VERDICT: PASS` from this skill
+
+**All of these mean: stop, run the full checklist, and produce the Output Format block before proceeding.**

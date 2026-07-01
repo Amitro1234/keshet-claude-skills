@@ -1,45 +1,44 @@
 ---
-name: keshet-spec-pack
+name: spec-pack
 description: >
-  Spec Pack generation skill for Keshet Builders. Mandatory at Step 5 before any
-  code is written. Produces three documents: PRD (Product Requirements Document),
-  Technical Spec, and Acceptance Criteria. Triggers on: any request to start a new
-  project, "let's write the spec", "what should we build", Step 5 in the Builder Flow,
-  or any task that has not yet been specified in writing. Nothing gets built without a
-  Spec Pack. This is the single highest-leverage quality gate.
+  Use when starting a new project or feature, when the user asks to "write
+  the spec" or "what should we build," or when code is about to be written
+  with no Spec Pack in place yet.
 ---
 
 # Spec Pack Skill — Keshet Builder Mandatory
 
 ## Purpose
 
-A Spec Pack is the foundation of every Keshet Build. Writing code before a Spec Pack
-is approved is the single most common cause of rework, miscommunication, and production
-incidents on the platform.
+A Spec Pack is the foundation of every Keshet Build. Writing code before a
+Spec Pack is approved is the single most common cause of rework,
+miscommunication, and production incidents on the platform.
 
-This skill produces three documents that together define exactly what will be built,
-how it will be built, and how anyone can verify it was built correctly.
+This skill produces three documents that together define exactly what will
+be built, how it will be built, and how anyone can verify it was built
+correctly — see `templates.md` for the full PRD / Technical Spec /
+Acceptance Criteria templates.
 
-**Rule:** No code is written until the Spec Pack is approved by the Champion/Owner (Step 6).
+**Rule:** No code is written until the Spec Pack is approved by the
+Champion/Owner (Step 6).
 
 > **Platform compatibility:**
-> - Claude Code CLI: ✅ Full support — Claude writes Spec Pack files directly into `docs/spec/`
-> - Cowork: ✅ Full support — spec generation works in conversation; save output to connected folder
-> - Claude.ai Chat: ✅ Supported — Claude generates all three documents in conversation; copy into your ticket system (Monday/Jira)
+> - Claude Code CLI: full support — Claude writes Spec Pack files directly into `docs/spec/`
+> - Cowork: full support — spec generation works in conversation; save output to connected folder
+> - Claude.ai Chat: supported — Claude generates all three documents in conversation; copy into your ticket system (Monday/Jira)
 
 ---
 
 ## Trigger Conditions
 
-Activate this skill when any of the following applies:
-- A new project or feature is being started
-- The user says "let's write the spec", "what should we build", or "start the project"
-- The Builder is at Step 5 in the Builder Flow
-- Code is about to be written but no Spec Pack exists yet
-- The Champion/Owner asks what will be built
+Activate when: a new project or feature is being started, the user says
+"let's write the spec" / "what should we build" / "start the project", the
+Builder is at Step 5, code is about to be written but no Spec Pack exists
+yet, or the Champion/Owner asks what will be built.
 
-**Hard rule:** No code is written until the Spec Pack is complete and approved at Step 6.
-If the user tries to start coding without a Spec Pack, stop and run this skill first.
+**Hard rule:** No code is written until the Spec Pack is complete and
+approved at Step 6. If the user tries to start coding without a Spec Pack,
+stop and run this skill first.
 
 ---
 
@@ -51,270 +50,9 @@ If the user tries to start coding without a Spec Pack, stop and run this skill f
 | **Technical Spec** | Builder (with Claude) | Builder, AI Architecture | Step 6 |
 | **Acceptance Criteria** | Champion/Owner + Builder | Builder, QA, Champion | Step 8 + Step 10 |
 
-All three live in the Spec Pack ticket (Monday / Jira). They are linked from the
-project's `CLAUDE.md` and committed to the repo under `docs/spec/`.
-
----
-
-## Document 1: PRD (Product Requirements Document)
-
-### Purpose
-Defines the "what" and "why" — written from the user's perspective, not the technical
-implementation's perspective.
-
-### PRD Template
-
-```markdown
-# PRD — [Project Name]
-Version: 1.0
-Date: [date]
-Champion/Owner: [name, role]
-Builder: [name]
-Status: [Draft / Under Review / Approved]
-
----
-
-## Problem Statement
-[1–3 sentences: what problem exists today, for whom, and what the impact is.
-Be specific — not "we need a better process" but "the scheduling team manually
-exports 150 rows from Monday every Monday morning, taking 2 hours, with frequent
-copy-paste errors that delay the broadcast."]
-
-## Proposed Solution
-[1–2 sentences: what the system will do to solve the problem. No technical details yet.]
-
-## Users and Use Cases
-
-### Primary Users
-| User type | Count | How they use it |
-|---|---|---|
-| [role] | [N] | [what they do with it] |
-
-### Primary Use Cases
-1. **[Use case name]:** [1 sentence description — who does what, with what outcome]
-2. **[Use case name]:** [...]
-
-### Out of Scope
-[What this system explicitly will NOT do. Be specific — this prevents scope creep.]
-- [item]
-- [item]
-
-## Success Metrics
-How will we know this is working?
-- [metric: e.g. "scheduling export takes <5 minutes instead of 2 hours"]
-- [metric: e.g. "zero copy-paste errors on Monday uploads"]
-
-## Data Classification
-🟢 Public / 🟡 Internal / 🔴 Confidential
-[What data will this system handle? Who can see it?]
-
-## Constraints and Dependencies
-- [constraint: timeline, budget, regulatory, existing system]
-- [dependency: other system, team, approval needed]
-
-## Open Questions
-- [ ] [question — who needs to answer it, by when]
-```
-
----
-
-## Document 2: Technical Spec
-
-### Purpose
-Defines the "how" — the architecture, data model, integrations, and implementation
-plan. Written by the Builder with Claude assistance. Reviewed by AI Architecture
-for Production apps.
-
-### Technical Spec Template
-
-```markdown
-# Technical Spec — [Project Name]
-Version: 1.0
-Date: [date]
-Builder: [name]
-Reviewed by: [AI Architecture reviewer, if applicable]
-Status: [Draft / Under Review / Approved]
-
----
-
-## Application Category
-[Local Demo / Department Tool / Production]
-
-## Architecture Overview
-
-### Layer diagram
-```
-[Presentation]   ← [what's here: e.g., Python FastAPI routes, or MCP tool handlers]
-[Business Logic] ← [what's here: e.g., scheduling logic, validation rules]
-[Data Access]    ← [what's here: e.g., DB models, Monday API client]
-[Infrastructure] ← [logging, secrets, config, monitoring]
-```
-
-### Technology Stack
-| Layer | Technology | Justification |
-|---|---|---|
-| Language | [e.g. Python 3.12] | [reason — e.g., team familiarity, existing libs] |
-| Framework | [e.g. FastAPI] | [reason] |
-| Database | [e.g. PostgreSQL 15] | [reason] |
-| Hosting | [e.g. Azure App Service] | [reason] |
-
-Any deviation from org defaults (Python / TypeScript) requires an ADR.
-
-### External Integrations
-| Service | MCP Connector | Purpose | Data sent | Approved? |
-|---|---|---|---|---|
-| [e.g. Monday.com] | `monday` | Read task list | Internal task data | ✅ See approved-mcp-connectors.md |
-
-### Data Model
-[For each key entity, define the table/schema. Reference `db-structure` skill for
-naming conventions.]
-
-```sql
--- Example
-CREATE TABLE broadcast_events (
-    id          BIGSERIAL PRIMARY KEY,
-    external_id TEXT NOT NULL,
-    title       TEXT NOT NULL,
-    scheduled_at TIMESTAMPTZ NOT NULL,
-    status      TEXT NOT NULL DEFAULT 'pending',
-    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-CREATE UNIQUE INDEX uq_broadcast_events_external_id ON broadcast_events(external_id);
-```
-
-### API Design
-[For each endpoint, define the contract.]
-
-```
-POST /api/v1/events
-Description: Create a broadcast event
-Auth: Bearer token (scope: events:write)
-Request body: { external_id, title, scheduled_at }
-Response 201: { id, external_id, title, scheduled_at, status }
-Response 400: { error: "validation error", details: [...] }
-Response 409: { error: "duplicate external_id" }
-```
-
-### Security Approach
-- Authentication: [e.g., Azure AD token via MSAL]
-- Authorization: [e.g., role check on every endpoint]
-- Secret management: [e.g., Azure Key Vault via environment variables]
-- Data classification handling: [specific controls for this project's data level]
-
-### Error Handling Strategy
-[How will errors be surfaced to users? What gets logged? What gets retried?]
-
-### Deployment Plan
-- Stage: [where, how, what CI/CD]
-- Production: [where, how, what CI/CD]
-- Rollback: [how to roll back if something goes wrong]
-
-## Architectural Decision Records (ADRs)
-
-### ADR-001: [Decision title]
-**Date:** [date]
-**Status:** Accepted
-**Context:** [what problem]
-**Decision:** [what was chosen]
-**Alternatives:** [what else was considered]
-**Consequences:** [trade-offs]
-
-## Known Risks
-| Risk | Likelihood | Impact | Mitigation |
-|---|---|---|---|
-| [risk] | High/Med/Low | High/Med/Low | [how we handle it] |
-
-## Estimated Build Time
-| Phase | Estimate | Owner |
-|---|---|---|
-| DB schema + migrations | [Xh] | Builder |
-| API routes | [Xh] | Builder |
-| Business logic | [Xh] | Builder |
-| Tests | [Xh] | Builder |
-| Documentation | [Xh] | Builder |
-| **Total** | **[Xh]** | |
-```
-
----
-
-## Document 3: Acceptance Criteria
-
-### Purpose
-Defines exactly what "done" means. Written in plain language. Used by the Builder
-to verify the build, by Claude to run the Validation Sandbox (Step 8), and by the
-Champion/Owner to sign off at Step 10.
-
-### Acceptance Criteria Template
-
-```markdown
-# Acceptance Criteria — [Project Name]
-Version: 1.0
-Date: [date]
-Status: [Draft / Approved]
-
----
-
-## Format: Given / When / Then
-
-Each criterion follows this format:
-- **Given** [initial state or precondition]
-- **When** [action taken]
-- **Then** [expected outcome — verifiable and specific]
-
----
-
-## Functional Criteria
-
-### [Use Case 1 name]
-
-**AC-001:**
-- Given: [precondition]
-- When: [action]
-- Then: [outcome — specific and measurable, e.g., "the event appears in the list with status 'scheduled'"]
-
-**AC-002:**
-- Given: [precondition]
-- When: [action — edge case, e.g., duplicate entry]
-- Then: [outcome — e.g., "a 409 error is returned with message 'duplicate external_id'"]
-
-### [Use Case 2 name]
-
-**AC-003:** ...
-
----
-
-## Non-Functional Criteria
-
-**AC-NF-001 — Performance:**
-- Given: 100 concurrent users
-- When: any user submits an event
-- Then: the response time is under 500ms at the 95th percentile
-
-**AC-NF-002 — Security:**
-- Given: an unauthenticated request
-- When: any protected endpoint is called
-- Then: a 401 is returned — no data is exposed
-
-**AC-NF-003 — Logging:**
-- Given: any user action that writes data
-- When: the action completes (success or failure)
-- Then: an audit trail entry is written with actor, action, resource, result, and timestamp
-
----
-
-## Out-of-Scope Confirmations
-
-The following are explicitly NOT tested and NOT expected:
-- [item]
-
----
-
-## Sign-off
-
-Champion/Owner: _____________________ Date: _______
-Builder: _____________________ Date: _______
-```
+All three live in the Spec Pack ticket (Monday / Jira). They are linked from
+the project's `CLAUDE.md` and committed to the repo under `docs/spec/`. Full
+templates for all three: `templates.md`.
 
 ---
 
@@ -354,6 +92,27 @@ Before advancing from Step 5 to Step 6 (Spec Approval):
 - Do not write the Spec Pack alone — the PRD must be validated by the Champion/Owner before Step 6
 - Do not use vague problem statements ("we need a better process") — be specific and quantified
 
+---
+
+## Rationalizations — Excuse vs. Reality
+
+| Excuse | Reality |
+|---|---|
+| "We already know what to build, the spec is just paperwork" | The spec is where scope creep and rework get caught — before code, not after. |
+| "Let's code first and write the spec to match" | That's not a spec, it's a retroactive rationalization of whatever got built. |
+| "It's a small feature, doesn't need all three documents" | Scope always grows. The Technical Spec you skipped is the one that would have caught the growth. |
+| "The Champion is busy, I'll just start and get approval later" | Step 6 approval exists before Step 7 build for a reason — after-the-fact sign-off isn't a gate. |
+| "The Acceptance Criteria are obvious, no need to write them down" | "Obvious" to the Builder often isn't obvious to the Champion signing off at Step 10 — write it down. |
+
+## Red Flags — STOP and run this skill first
+
+- You're about to write code and there's no Spec Pack ticket yet
+- You're thinking "we'll formalize the spec after we see what we build"
+- The PRD's "Out of Scope" section is blank
+- An Acceptance Criterion reads like a vague feeling ("the app should be fast") instead of Given/When/Then
+- The user says "let's just start coding, we'll figure out the details as we go"
+
+**All of these mean: stop, produce all three documents, and get Champion/Owner sign-off before Step 7.**
 
 ---
 

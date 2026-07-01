@@ -1,11 +1,8 @@
 ---
-name: keshet-code-review
+name: code-review
 description: >
-  Structured code review gate for Keshet Builders. Mandatory at Agent Validation Sandbox
-  (Step 8) and before Stage→Prod gate (Step 10). Triggers on: any request to review,
-  check, or validate code; before any git push or merge; or whenever the Builder asks
-  "is this ready?". Covers correctness, maintainability, security, performance, and
-  test coverage.
+  Use when the user asks to review, check, or validate code; before any git
+  push or merge; or when advancing through Builder Flow Steps 8 or 10.
 ---
 
 # Code Review Skill — Keshet Builder Mandatory

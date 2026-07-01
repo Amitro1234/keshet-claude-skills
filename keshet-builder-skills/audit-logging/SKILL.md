@@ -1,5 +1,5 @@
 ---
-name: keshet-audit-logging
+name: audit-logging
 description: >
   Audit trail and logging standards for Keshet Builders. Mandatory at Build (Step 7)
   for all Production applications. Triggers on: any code that writes logs, any user action

@@ -1,11 +1,8 @@
 ---
-name: keshet-deployment
+name: deployment
 description: >
-  Deployment skill for Keshet Builders. Mandatory at Stage deployment (Step 9) and
-  Stage→Prod gate (Step 10). Covers the full deployment sequence: pre-flight checks,
-  environment validation, smoke test execution, rollback preparation, and deployment
-  sign-off. Triggers on: any request to deploy to Stage or Production, "push to staging",
-  "go to prod", "release", or whenever the Builder is advancing to Step 9 or 10.
+  Use when deploying to Stage or Production, when a rollback is being considered
+  or executed, or when advancing to Builder Flow Step 9 or 10.
 ---
 
 # Deployment Skill — Keshet Builder Mandatory
@@ -306,3 +303,26 @@ Notify: Champion/Owner, AI Architecture, relevant on-call channel.
 - Do not push hotfixes directly to Production without running at least a pre-flight check
 - Do not deploy multiple changes in the same deployment window — one change at a time
 - Do not mark a deployment as successful until smoke tests pass
+
+---
+
+## Rationalizations — Excuse vs. Reality
+
+| Excuse | Reality |
+|---|---|
+| "It's just a hotfix, skip the pre-flight" | Hotfixes bypass exactly the checks designed to catch hotfix-shaped mistakes. Run the checklist. |
+| "Tests are flaky, I'll deploy anyway" | Flaky tests hide real regressions — fix or quarantine the test, don't ignore the signal. |
+| "It's Friday but this is small, low risk" | "Small" deployments cause the same incidents on Friday as any other day — the difference is who's around to fix it. |
+| "We'll write the rollback plan if something breaks" | A rollback plan written during an incident is written under panic, not before it. Write it now, while calm. |
+| "The Champion is out, I'll deploy and get sign-off after" | Sign-off exists to happen before deployment. After-the-fact approval is not a gate, it's a formality. |
+| "Smoke tests are basically passing, close enough" | "Close enough" on a health check is a production incident with extra steps. |
+
+## Red Flags — STOP and do not deploy
+
+- You're thinking "this is a small change, the full checklist is overkill"
+- You're about to deploy on a Friday afternoon or during a broadcast event
+- You're investigating a failure in the live Production environment instead of rolling back first
+- You don't have a rollback plan written down and are deploying anyway
+- You're about to deploy to Production without a Champion sign-off in hand
+
+**All of these mean: stop, complete the checklist, and produce the sign-off block before deploying.**

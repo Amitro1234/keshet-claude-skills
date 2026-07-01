@@ -1,10 +1,9 @@
 ---
 name: output-discipline
 description: >
-  Org-level output token reduction skill — always active for all Keshet users.
-  Enforces diffs over full files, proportional responses, no padding, no unsolicited
-  alternatives, and agent checkpoints every 10 tool calls. Triggers on: every response
-  where code is modified, every agentic session, every coding task of any kind.
+  Use whenever a file is being modified, a response is being composed, or an
+  autonomous agent session is running — applies to every Keshet Claude Code,
+  Cowork, or Chat session.
 ---
 
 # output-discipline — Org-Level Output Token Reduction Skill
@@ -12,131 +11,46 @@ description: >
 ## Purpose
 
 Output tokens cost 5x more than input tokens in the Anthropic pricing model.
-This skill enforces output discipline across the organization to eliminate waste
-without reducing quality.
-
-Applies to: all Claude Code users, all Cowork users, all chat users.
-
-> **Platform compatibility:**
-> - Claude Code CLI: ✅ Full support
-> - Cowork: ✅ Full support
-> - Claude.ai Chat: ✅ Full support
+This skill enforces output discipline to eliminate waste without reducing
+quality. Worked examples and cost math live in `reference.md`.
 
 ---
 
 ## Trigger Conditions
 
-This skill is **always active** for all Keshet users. It is not optional.
-
-Activate explicitly when:
-- Any file is being modified (diffs, not full rewrites)
-- A response to a question is being composed (keep it proportional)
-- An autonomous agent session is running (checkpoint every 10 tool calls)
-- A user asks for a code change, review, or explanation of any kind
+Always active — not optional. Applies to any file modification, any response
+composition, any autonomous agent session, any code change/review/explanation.
 
 ---
 
 ## Core Rules
 
-### Rule 1: Diffs over full files
-
-When modifying an existing file, output ONLY the changed blocks with ±5 lines of
-surrounding context — never the full file.
-
-**Exception:** the file is new (does not exist yet), or the user explicitly asks for the full file.
-
-Bad output:
-```python
-# [entire 300-line file rewritten because 3 lines changed]
-```
-
-Good output:
-```python
-# ... (line 47)
-def process_event(event: dict) -> None:
--    logger.info(event)          # changed: added structured logging
-+    logger.info("event received", extra={"event_id": event.get("id")})
-# ... (line 52)
-```
-
-### Rule 2: No boilerplate comments
-
-Never output comments that describe what code is obviously doing:
-
-```python
-# Bad — never write these:
-# Import libraries
-import pandas as pd
-
-# Define main function
-def main():
-    pass
-
-# Call main
-main()
-```
-
-### Rule 3: Responses proportional to the question
-
-| Question type | Max response length |
-|---|---|
-| Yes/No question | 1–3 sentences |
-| Factual lookup | 1 paragraph |
-| Code fix (single bug) | The fix + 1 sentence explanation |
-| Architecture question | Up to 5 bullet points or 3 paragraphs |
-| Full design document | Unlimited, but only when explicitly requested |
-
-Do not pad responses with: "Great question!", summaries of what you just said,
-"Let me know if you need anything else", or restatements of the user's request.
-
-### Rule 4: Prefer references over repetition
-
-When the user has already seen a piece of code or text in the current session,
-reference it by name rather than repeating it.
-
-Good: "Update the `process_event` function you wrote earlier to also log the timestamp."
-Bad: [Repeat the entire function before suggesting changes]
-
-### Rule 5: No unsolicited alternatives
-
-Do not output 3 alternative implementations when 1 was requested.
-Do not add "you could also consider..." unless the user asked for options.
-
----
+1. **Diffs over full files** — output only changed blocks with ±5 lines of context, never a full-file rewrite, unless the file is new or the user asks for the full file.
+2. **No boilerplate comments** — never describe what code obviously does.
+3. **Responses proportional to the question** — a yes/no gets 1–3 sentences, not a report. See `reference.md` for the length table.
+4. **Reference, don't repeat** — point back to code/text already shown this session instead of restating it.
+5. **No unsolicited alternatives** — one implementation unless alternatives were requested.
 
 ## Agentic session limits
 
-When running as an autonomous agent (Claude Code with tool use):
-
-- After every **10 consecutive tool calls**, stop and produce a checkpoint summary:
+- After every **10 consecutive tool calls**, stop and produce a checkpoint:
   ```
   === Checkpoint (10 tool calls used) ===
   Done: [list]
   Next: [next step]
   Awaiting approval to continue.
   ```
-- Do not run `git commit` or `git push` without explicit user confirmation
-- Do not create new files the user did not ask for (no auto-READMEs, no auto-test files)
+- Do not `git commit` or `git push` without explicit user confirmation.
+- Do not create files the user did not ask for (no auto-READMEs, no auto-test files).
 
 ---
 
-## Cost Rationale
-
-Output tokens cost **5× more** than input tokens (see `claude-enterprise-skills/_shared/model-tiers.md` for current per-tier input/output pricing).
-Every unnecessary output token — padding, full-file rewrites, unsolicited alternatives — is
-real money at team scale.
-
-A team of 20 Builders, each generating 20% fewer output tokens through discipline:
-- Baseline output spend: ~$6/day × 20 = $120/day → $30,000/year
-- After output discipline: ~$96/day → $24,000/year
-- Saving: ~$6,000/year from formatting rules alone — zero reduction in quality
-
 ## What NOT to do
 
-- Do not rewrite a file that only needed a small change — output diffs, not full files
-- Do not repeat the user's question or task description at the start of a response
-- Do not add a summary section at the end that repeats what was just said
-- Do not generate example usage or test cases unless explicitly asked
-- Do not generate more than one implementation of the same thing unless asked for alternatives
-- Do not pad responses with "Great question!", "Let me know if you need anything else", or similar
-- Do not output boilerplate comments that describe what the code obviously does
+- Do not rewrite a file that only needed a small change
+- Do not repeat the user's question at the start of a response
+- Do not add a closing summary that repeats what was just said
+- Do not generate example usage or test cases unless asked
+- Do not generate more than one implementation unless alternatives were requested
+- Do not pad responses with "Great question!" or similar
+- Do not output boilerplate comments

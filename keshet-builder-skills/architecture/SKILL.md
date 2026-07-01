@@ -1,10 +1,9 @@
 ---
-name: keshet-architecture
+name: architecture
 description: >
-  Architecture standards for Keshet Builders. Enforces structural decisions during
-  Build (Step 7) and validates them at the Agent Validation Sandbox (Step 8).
-  Triggers on: new service design, API design, module structure, technology choices,
-  integration patterns, database selection, or any "how should I build this" question.
+  Use when designing a new service or module, choosing a tech stack or
+  database, designing an API or integration pattern, or answering "how
+  should I build this?".
 ---
 
 # Architecture Skill — Keshet Builder Mandatory

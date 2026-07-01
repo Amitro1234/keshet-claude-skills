@@ -1,5 +1,5 @@
 ---
-name: keshet-documentation
+name: documentation
 description: >
   Documentation standards for Keshet Builders. Mandatory at Build (Step 7) and Spec
   Pack generation (Step 5). Triggers on: any request to write or review documentation,

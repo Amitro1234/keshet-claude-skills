@@ -1,5 +1,5 @@
 ---
-name: keshet-unit-test
+name: unit-test
 description: >
   Unit and integration testing standards for Keshet Builders. Mandatory at Build (Step 7)
   and Agent Validation Sandbox (Step 8). Triggers on: any request to write, review, or

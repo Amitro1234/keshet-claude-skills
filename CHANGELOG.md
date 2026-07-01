@@ -9,6 +9,34 @@ Owner: AI Architecture (Amit Rosen, CIO division)
 
 ## [Unreleased] — July 2026
 
+### Changed (skill-authoring quality pass, per the "Superpowers" skill-writing methodology)
+
+- Fixed `name:` frontmatter mismatches in 12 files — every `keshet-builder-skills/*`
+  skill declared `name: keshet-<skill>` while living in a directory named `<skill>`
+  (e.g. `security/SKILL.md` declared `keshet-security`); `model-router-skill/SKILL.md`
+  declared `model-router`. Names now match their directories.
+- Rewrote 9 descriptions that summarized the skill's internal workflow instead of
+  stating pure trigger conditions (`model-router-skill`, `output-discipline`,
+  `agentic-loop-guard`, `context-hygiene`, `company-agent-guardrails`, `deployment`,
+  `memory`, `spec-pack`, `code-review`, `architecture`) — a description that lists
+  internal steps/rules lets an agent treat it as sufficient and skip the body, which
+  defeats the point of the actual checklists inside.
+- Trimmed the 5 "always active" skills (loaded every session per
+  `templates/global.CLAUDE.md`) toward a lean core + separate reference file:
+  `model-router-skill` 1930 → 474 words (+ new `reference.md`), `company-agent-guardrails`
+  1001 → 567 words (+ new `reference.md`), `agentic-loop-guard` 932 → 418 words (+ new
+  `reference.md`), `output-discipline` 776 → 343 words (+ new `reference.md`),
+  `context-hygiene` 609 → 312 words (+ new `reference.md`).
+- Split the two largest skill files into a lean `SKILL.md` + a reference file: `spec-pack`
+  (1870 → 991 words + new `templates.md` with the three document templates) and `memory`
+  (1788 → 501 words + new `protocols.md` with the three platform protocols).
+- Added an "Excuse vs. Reality" rationalization table and a "Red Flags" list to
+  `security`, `deployment`, and `spec-pack` — the three Builder Flow gates most likely
+  to be skipped under real deadline pressure; explicit counters to specific
+  rationalizations hold up better under pressure than "must/should" prose alone.
+- Removed an unresolved `TODO(Amit): "Prempti" is undefined` comment from
+  `company-agent-guardrails/SKILL.md`, generalizing the sentence it was attached to.
+
 ### Fixed
 
 - `enforcement/hooks/pre_tool_use_guard.py` — the hook only ever matched

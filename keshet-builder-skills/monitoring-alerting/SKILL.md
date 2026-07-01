@@ -1,5 +1,5 @@
 ---
-name: keshet-monitoring-alerting
+name: monitoring-alerting
 description: >
   Monitoring and alerting standards for Keshet Builders. Mandatory before Production
   deployment (Step 10 gate) and active throughout Step 11 (Production Monitoring).

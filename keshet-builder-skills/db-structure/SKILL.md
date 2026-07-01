@@ -1,5 +1,5 @@
 ---
-name: keshet-db-structure
+name: db-structure
 description: >
   Database design standards for Keshet Builders. Mandatory at Build (Step 7) whenever
   a schema, migration, or data model is created or modified. Triggers on: CREATE TABLE,
