@@ -23,9 +23,10 @@ Claude Code defaults to expensive models for everything — even trivial tasks l
 handles just as well. The router fixes that by routing each task to the cheapest model
 that can handle it well.
 
-**Keshet cost context:** Sonnet costs 10× more than Haiku per token. A team of 20 Builders
+**Keshet cost context:** Sonnet costs several times more than Haiku per token (see
+`_shared/model-tiers.md` for the current ratio). A team of 20 Builders
 defaulting to Sonnet for every operation spends ~$130K/year on API. Consistent routing
-reduces that to ~$85K — a saving of ~$45K without reducing quality.
+reduces that to ~$95K — a saving of ~$35K without reducing quality.
 
 ---
 
@@ -44,13 +45,17 @@ Activate explicitly when:
 
 ## Routing Table
 
+> Model IDs and prices are **not** hardcoded here — `claude-enterprise-skills/_shared/model-tiers.md`
+> is the single source of truth. Check that file for the current pinned model ID and
+> per-1M price before relying on any number in this section.
+
 | Tier | Model | Cost (input/output per 1M) | Use When |
 |---|---|---|---|
-| **1 — Light** | `claude-haiku-4-5-20251001` | $0.80 / $4 | File reads, grep, lint, tests, bash, config parsing |
-| **2 — Standard** | `claude-sonnet-4-6` | $3 / $15 | Write code, fix bugs, refactor, test writing, debug, code review |
-| **3 — Heavy** | `claude-opus-4-8` | $15 / $75 | Architecture, security audit, greenfield design, threat modeling |
+| **1 — Light** | see `_shared/model-tiers.md` | see `_shared/model-tiers.md` | File reads, grep, lint, tests, bash, config parsing |
+| **2 — Standard** | see `_shared/model-tiers.md` | see `_shared/model-tiers.md` | Write code, fix bugs, refactor, test writing, debug, code review |
+| **3 — Heavy** | see `_shared/model-tiers.md` | see `_shared/model-tiers.md` | Architecture, security audit, greenfield design, threat modeling |
 
-> **Default when uncertain:** Tier 2 — `claude-sonnet-4-6`
+> **Default when uncertain:** Tier 2 — see `_shared/model-tiers.md` for the current Tier 2 model ID
 
 ---
 
@@ -127,7 +132,7 @@ these additional rules:
 
 For pipelines and automation (CI/CD, nightly jobs):
 - Always set model explicitly — do not rely on routing heuristics
-- Default pipeline model: `claude-haiku-4-5-20251001`
+- Default pipeline model: the Tier 1 model (see `_shared/model-tiers.md` for the current pinned ID)
 - Escalate to Sonnet only for code generation steps
 - Combine with `batch-detector` skill for jobs processing >10 items
 
@@ -135,22 +140,24 @@ For pipelines and automation (CI/CD, nightly jobs):
 
 ### Step 4 — Announce and set the model
 
-Always state the routing decision before starting work:
+Always state the routing decision before starting work (model IDs below are examples —
+see `_shared/model-tiers.md` for the current pinned values):
 
-> "Task: run lint and show failures → **Tier 1**, using `claude-haiku-4-5-20251001`."
-> "Task: implement SharePoint connector module → **Tier 2**, using `claude-sonnet-4-6`."
-> "Task: security audit of API gateway → **Tier 3**, using `claude-opus-4-8`."
+> "Task: run lint and show failures → **Tier 1**, using the Tier 1 model."
+> "Task: implement SharePoint connector module → **Tier 2**, using the Tier 2 model."
+> "Task: security audit of API gateway → **Tier 3**, using the Tier 3 model."
 
-Set the model via slash command if needed:
+Set the model via slash command if needed (substitute the current pinned ID for
+each tier from `_shared/model-tiers.md`):
 ```
-/model claude-haiku-4-5-20251001   # Tier 1
-/model claude-sonnet-4-6           # Tier 2
-/model claude-opus-4-8             # Tier 3
+/model <tier-1-model-id>   # Tier 1 — see _shared/model-tiers.md
+/model <tier-2-model-id>   # Tier 2 — see _shared/model-tiers.md
+/model <tier-3-model-id>   # Tier 3 — see _shared/model-tiers.md
 ```
 
 > **Platform note:**
 > - **Claude Code CLI:** use `/model <model-string>` as shown above
-> - **Cowork / Claude.ai Chat:** select the model from the model picker in the UI (Opus 4.8 = Tier 3, Sonnet 4.6 = Tier 2, Haiku 4.5 = Tier 1). The slash command is not available outside Claude Code CLI.
+> - **Cowork / Claude.ai Chat:** select the model from the model picker in the UI, matching the current Tier 1/2/3 pins in `_shared/model-tiers.md`. The slash command is not available outside Claude Code CLI.
 
 ---
 
@@ -174,7 +181,7 @@ Models cannot be switched automatically mid-task. When scope escalates during a 
 1. Stop work. Announce:
    ```
    ESCALATION: This task needs a heavier model (Tier [N]).
-   Action: click the model picker (top of the chat) → select [Opus 4.8 / Sonnet 4.6].
+   Action: click the model picker (top of the chat) → select [Opus 4.8 / Sonnet 5].
    Then start a new message to continue — I'll pick up from where we left off.
    ```
 2. At the start of the next message, re-state the context and continue.
@@ -195,10 +202,11 @@ Estimated additional cost: ~$0.002 — acceptable for this task size.
 
 ## Quick Reference
 
+Model IDs intentionally omitted below — see `_shared/model-tiers.md` for current pins.
 ```
-TIER 1 — claude-haiku-4-5-20251001   → read, run, find, lint, format, check, diff
-TIER 2 — claude-sonnet-4-6           → write, fix, test, explain, refactor, debug, review, spec
-TIER 3 — claude-opus-4-8             → design, architect, audit, investigate, gate-decision
+TIER 1 → read, run, find, lint, format, check, diff
+TIER 2 → write, fix, test, explain, refactor, debug, review, spec
+TIER 3 → design, architect, audit, investigate, gate-decision
 ```
 
 ---

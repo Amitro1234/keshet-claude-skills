@@ -15,6 +15,11 @@ and any pipeline or automation using Claude.
 The goal is not sandbox-grade security — it is to make dangerous actions visible
 and require explicit human confirmation before they execute.
 
+> **Platform compatibility:**
+> - Claude Code CLI: ✅ Full support — guidance applies, and Claude Code's own hook/permission system can additionally enforce some of these rules at the shell level
+> - Cowork: ✅ Full support — guidance applies the same way; Cowork cannot run shell-level enforcement, so these rules rely on the agent following them
+> - Claude.ai Chat: ✅ Full support — guidance applies the same way; Chat cannot run shell-level enforcement either, same limitation as Cowork
+
 ---
 
 ## Trigger Conditions
@@ -116,3 +121,4 @@ When proposing a guardrail set, always respond with:
 ## Safety Notes
 
 Do not install endpoint agents, hooks, MCP servers, or persistent services without explicit user approval. For third-party tools like Prempti, cloning source for review is lower risk than installing release artifacts; installing should go through security review, checksum verification, and a pilot environment.
+<!-- TODO(Amit): "Prempti" is undefined here — confirm if this is a real tool name, a typo, or an internal codename before next release -->

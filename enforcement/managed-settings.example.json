@@ -1,0 +1,50 @@
+{
+  "_comment_1": "ENTERPRISE-MANAGED TIER — deploy via Claude admin console / MDM / OS policy on Builder machines. Once deployed at this tier, Builders CANNOT override these with a project or user settings.json. This is the only tier that is genuinely un-bypassable by a Builder. See enforcement/README.md for deployment instructions and source-priority rules.",
+  "_comment_2": "Verify exact key names against https://code.claude.com/docs/en/admin-setup before deploying — this file is Claude's best current understanding as of 2026-07-01, not a guaranteed-current schema.",
+
+  "allowManagedPermissionRulesOnly": true,
+  "managedHooksOnly": true,
+
+  "permissions": {
+    "deny": [
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/.aws/**)",
+      "Read(**/.ssh/**)",
+      "Read(**/credentials.json)",
+      "Read(**/*secret*)",
+      "Bash(curl * | sh)",
+      "Bash(curl * | bash)",
+      "Bash(wget * | sh)",
+      "Bash(sudo *)",
+      "Bash(chmod 777 *)",
+      "Bash(rm -rf /)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(history -c)"
+    ],
+    "defaultMode": "ask"
+  },
+
+  "_comment_3": "MCP allowlist — must stay in sync with docs/approved-mcp-connectors.md by hand until an automated sync script exists (see enforcement/README.md open item). Any connector not listed here is denied org-wide, matching the connectors doc's own enforcement clause.",
+  "allowedMcpServers": [
+    "slack",
+    "microsoft-teams",
+    "sharepoint",
+    "outlook-calendar",
+    "monday",
+    "jira",
+    "github",
+    "postgresql",
+    "azure-blob-storage",
+    "excel-sheets",
+    "azure-ai-search",
+    "context7",
+    "filesystem",
+    "git",
+    "azure-devops"
+  ],
+  "deniedMcpServers": ["*"]
+}

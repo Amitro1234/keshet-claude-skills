@@ -53,7 +53,7 @@ These limits are non-negotiable. Do not exceed them without explicit user overri
 | Max total tool calls per session | 50 | Budget ceiling for an agentic session |
 | Max retries on a single failed operation | 3 | Prevents retry storms |
 | Max sub-agents spawned per session | 5 | Prevents exponential fan-out |
-| Max tokens consumed before cost alert | 200K | ~$0.60 on Sonnet — warrants attention |
+| Max tokens consumed before cost alert | 200K | ~$0.60 at current Sonnet (Tier 2) rates — see `claude-enterprise-skills/_shared/model-tiers.md` — warrants attention |
 
 ---
 
@@ -120,7 +120,7 @@ This looks like a stuck loop. Stopping to prevent runaway spend.
 Monitor estimated token consumption. When crossing 200K tokens in a single session:
 
 ```
-COST ALERT: This session has consumed ~200K tokens (~$0.60 at Sonnet rates).
+COST ALERT: This session has consumed ~200K tokens (~$0.60 at Sonnet rates — see claude-enterprise-skills/_shared/model-tiers.md for current pricing).
 Task completion estimate: [X]% done.
 Projected total: ~[Y]K tokens (~$[Z]).
 
@@ -161,7 +161,7 @@ always surface the cost alert (Step 5) before continuing.
 
 An unguarded agentic loop on a coding task can consume:
 - 5M tokens in 20 minutes (tool call responses + code context)
-- ~$15–25 on Sonnet 4.6 for a single session gone wrong
+- ~$15–25 on Sonnet (Tier 2) for a single session gone wrong — see `claude-enterprise-skills/_shared/model-tiers.md` for current Tier 2 pricing
 
 A team of 20 Builders, one runaway session each per month:
 - 20 × $20 = $400/month in preventable waste

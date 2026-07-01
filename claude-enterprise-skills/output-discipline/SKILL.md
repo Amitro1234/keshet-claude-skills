@@ -122,7 +122,7 @@ When running as an autonomous agent (Claude Code with tool use):
 
 ## Cost Rationale
 
-Output tokens cost **5× more** than input tokens (Sonnet 4.6: $3/M input vs. $15/M output).
+Output tokens cost **5× more** than input tokens (see `claude-enterprise-skills/_shared/model-tiers.md` for current per-tier input/output pricing).
 Every unnecessary output token — padding, full-file rewrites, unsolicited alternatives — is
 real money at team scale.
 

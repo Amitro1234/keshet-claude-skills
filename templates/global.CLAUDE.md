@@ -25,11 +25,11 @@ Before starting ANY task, classify it and announce the tier and model:
 
 | Tier | Model | When |
 |---|---|---|
-| 1 — Light | `claude-haiku-4-5-20251001` | Read files, run tools, grep, lint, bash, git ops |
-| 2 — Standard | `claude-sonnet-4-6` | Write code, fix bugs, refactor, tests, debug, review, specs |
-| 3 — Heavy | `claude-opus-4-8` | Architecture, security audit, greenfield design, Stage→Prod gate |
+| 1 — Light | see `claude-enterprise-skills/_shared/model-tiers.md` | Read files, run tools, grep, lint, bash, git ops |
+| 2 — Standard | see `claude-enterprise-skills/_shared/model-tiers.md` | Write code, fix bugs, refactor, tests, debug, review, specs |
+| 3 — Heavy | see `claude-enterprise-skills/_shared/model-tiers.md` | Architecture, security audit, greenfield design, Stage→Prod gate |
 
-Default when uncertain: **Tier 2, `claude-sonnet-4-6`**
+Default when uncertain: **Tier 2** — current pinned model ID is in `claude-enterprise-skills/_shared/model-tiers.md`, not hardcoded here, so this file never goes stale when a model ships.
 
 Extended routing rules: `~/.claude/skills/keshet-claude-skills/claude-enterprise-skills/model-router-skill/SKILL.md`
 

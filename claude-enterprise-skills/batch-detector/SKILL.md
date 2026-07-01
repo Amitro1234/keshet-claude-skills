@@ -81,7 +81,7 @@ requests = [
     {
         "custom_id": f"item-{i}",
         "params": {
-            "model": "claude-haiku-4-5-20251001",  # Use cheapest model that fits the task
+            "model": "claude-haiku-4-5-20251001",  # Tier 1 — see claude-enterprise-skills/_shared/model-tiers.md for the current pinned ID
             "max_tokens": 500,
             "messages": [{"role": "user", "content": prompt_for_item(item)}]
         }
@@ -91,7 +91,7 @@ requests = [
 ```
 
 Key rules for batch jobs:
-- Default to `claude-haiku-4-5-20251001` unless the task requires reasoning (use Sonnet then)
+- Default to the Tier 1 model (see `claude-enterprise-skills/_shared/model-tiers.md` for the current pinned ID) unless the task requires reasoning (use Sonnet then)
 - Set `max_tokens` as low as the task allows — do not use 4096 for a classification that needs 50 tokens
 - Use `custom_id` that maps back to your source data for easy join on results
 
@@ -102,7 +102,7 @@ Before submitting, output a cost estimate:
 ```
 Batch job estimate:
   Items: [N]
-  Model: claude-haiku-4-5-20251001
+  Model: [Tier 1 — see claude-enterprise-skills/_shared/model-tiers.md]
   Est. input tokens per item: ~[X]
   Est. output tokens per item: ~[Y]
   Total tokens: ~[N × (X + Y)]
@@ -115,17 +115,20 @@ Batch job estimate:
 
 ## Model selection for batch jobs
 
+> Model IDs intentionally omitted below — `claude-enterprise-skills/_shared/model-tiers.md`
+> is the source of truth for the current pinned ID per tier.
+
 | Task type | Model |
 |---|---|
-| Classification, tagging, routing | `claude-haiku-4-5-20251001` |
-| Extraction, summarization, translation | `claude-haiku-4-5-20251001` (upgrade to Sonnet if output quality is insufficient) |
-| Code review, security scan (CI/CD) | `claude-sonnet-4-6` |
-| Complex reasoning, multi-step analysis | `claude-sonnet-4-6` |
+| Classification, tagging, routing | Tier 1 |
+| Extraction, summarization, translation | Tier 1 (upgrade to Tier 2 if output quality is insufficient) |
+| Code review, security scan (CI/CD) | Tier 2 |
+| Complex reasoning, multi-step analysis | Tier 2 |
 
 ## What NOT to do
 
 - Do not route batch-eligible jobs through the synchronous API without flagging it first
-- Do not use `claude-opus-4-8` for batch jobs — never justified at scale
+- Do not use the Tier 3 model (see `_shared/model-tiers.md`) for batch jobs — never justified at scale
 - Do not set `max_tokens` to the model maximum for jobs that need short outputs
 - Do not submit a batch job without a `custom_id` strategy — results cannot be joined back to source data
 - Do not run batch jobs on tasks that require real-time human responses
@@ -135,9 +138,26 @@ Batch job estimate:
 
 ## Cost Rationale
 
-A pipeline classifying 500 support tickets per day:
-- Synchronous (Sonnet 4.6): ~$0.50/day → $180/year
-- Batch (Haiku 4.5, 50% off): ~$0.015/day → $5.50/year
+A pipeline classifying 500 support tickets per day (~300 input + 50 output tokens per
+ticket → ~150K input / 25K output tokens/day). This example has two independent
+savings levers — keep them separate, since only the second one is this skill's job:
+
+1. **Model tier (a `model-router` decision):** ticket classification is Tier 1 (no
+   reasoning needed), so it should never run on Sonnet in the first place.
+   - Sonnet, synchronous: ~$0.83/day → ~$300/year
+   - Haiku, synchronous: ~$0.28/day → ~$100/year
+   - Saving from routing to the right model tier: ~$200/year — this is a
+     `model-router` win, not a batch discount.
+
+2. **Batch API (this skill's decision):** ticket classification can wait up to 24h,
+   so the Haiku job qualifies for the flat 50% Batch API discount.
+   - Haiku, Batch API (50% off the Haiku sync cost): ~$0.14/day → ~$50/year
+   - Saving from batching alone: ~$50/year — exactly 50% off the Haiku sync cost above.
+
+Combined (Sonnet-sync baseline → Haiku-batch): ~$300/year → ~$50/year. Do not
+attribute the full combined saving to "the 50% Batch API discount" — only the
+second step (Haiku sync → Haiku batch) is the 50% discount; the first step is a
+separate model-downgrade decision.
 
 At scale, batch routing of automations and pipelines can save thousands of dollars
 per year on a 70-person team running multiple data workflows.

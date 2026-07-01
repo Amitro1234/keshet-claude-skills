@@ -1,0 +1,41 @@
+{
+  "_comment_1": "PROJECT TIER — copy to <project>/.claude/settings.json in every Builder repo (the org-template repo should ship this by default, per Builder Flow Step 3: Provisioning). Checked into version control, reviewed in PRs, editable by the Builder but visible to everyone. This tier implements the 'Ask' and 'Monitor' rows of company-agent-guardrails' Recommended Default Stance — the 'Deny' row belongs at the managed tier (see managed-settings.example.json) so it can't be locally removed.",
+  "_comment_2": "Verify exact key/glob syntax against https://code.claude.com/docs/en/permissions before relying on this in production.",
+
+  "permissions": {
+    "ask": [
+      "Bash(git push*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
+      "Bash(npm install*)",
+      "Bash(pip install*)",
+      "Bash(rm -r*)",
+      "Bash(mv *)",
+      "Bash(docker *)",
+      "Bash(kubectl *)",
+      "Bash(az deploy*)",
+      "Bash(az webapp*)",
+      "Edit(**/migrations/**)",
+      "Write(**/migrations/**)",
+      "Edit(**/*.env*)",
+      "Write(**/*.env*)"
+    ],
+    "defaultMode": "ask"
+  },
+
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|mcp__*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/pre_tool_use_guard.py"
+          }
+        ]
+      }
+    ]
+  },
+
+  "_comment_3": "Monitor tier (all shell execution, file writes, external API calls) is not a blocking mechanism — it's satisfied by the audit-logging skill + Claude Code's own session transcript. No settings.json entry needed; see docs/incident-response.md and keshet-builder-skills/audit-logging/SKILL.md for what must be logged and where."
+}
