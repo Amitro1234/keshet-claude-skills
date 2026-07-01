@@ -7,6 +7,44 @@ Owner: AI Architecture (Amit Rosen, CIO division)
 
 ---
 
+## [Unreleased] — July 2026
+
+### Fixed
+
+- `enforcement/hooks/pre_tool_use_guard.py` — the hook only ever matched
+  `tool_name == "Bash"`, so a native Windows session using the `PowerShell`
+  tool (this org's primary platform) had **zero** secret-content or
+  destructive-command coverage despite `docs/rules-policy.md` marking those
+  rules "🔒 Hard." Added a parallel `PowerShell` pattern set (`Get-Content`,
+  `Select-String`, `Remove-Item -Recurse -Force`, `Format-Volume`, etc.) and
+  updated `project-settings.example.json`'s `PreToolUse` matcher to
+  `Bash|PowerShell|mcp__*` so the hook actually fires for both tools.
+- `enforcement/hooks/pre_tool_use_guard.py` — `DESTRUCTIVE_PATTERNS`'s
+  `rm -rf` check only matched a bare `rm -rf /` (root, nothing after);
+  `rm -rf /home`, `rm -rf /etc`, `rm -rf ~`, `rm -rf .`, `rm -rf $HOME` were
+  all silently allowed through. Broadened to catch dangerous absolute/home/
+  system-dir targets while still allowing safe scoped deletes like
+  `rm -rf ./node_modules`.
+- `enforcement/tests/test_pre_tool_use_guard.py` — added 14 cases covering
+  the above (PowerShell tool + broadened `rm -rf` targets). 33/33 passing
+  (was 19).
+- `templates/global.CLAUDE.md` — "Cost Awareness" section hardcoded Haiku
+  and Opus per-token prices that didn't match
+  `claude-enterprise-skills/_shared/model-tiers.md` (the file's own stated
+  single source of truth), reintroducing the exact multi-file price drift
+  the shared file was built to prevent. Now references the shared file
+  instead of repeating numbers.
+- `enforcement/project-settings.example.json`, `docs/ADMIN_GUIDE.md`,
+  `enforcement/README.md` — flagged that the example hook command
+  (`python3 ...`) assumes a `python3` alias that stock Windows doesn't
+  reliably provide; added explicit verification guidance before deploying
+  to Windows Builder machines.
+- `docs/rules-policy.md` — added a note under the B2/B3 enforcement table
+  clarifying that "Hard" enforcement depended on the `PreToolUse` matcher
+  covering both `Bash` and `PowerShell`, which it did not until this pass.
+
+---
+
 ## [2.1.1] — June 2026
 
 ### Fixed

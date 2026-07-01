@@ -57,6 +57,8 @@
 
 **התובנה המרכזית לשכבה הזו:** ה-Rules שהם באמת Hard (B2, B3, B5) הם כולם Rules "מונעי אסון" — סוד שדולף, פקודה הרסנית, connector לא מאושר. ה-Rules ש"מנהלים תהליך" (B1, B6, B7) — שהם בעצם רוב הערך של ה-Builder Flow — **אין להם היום מנגנון אכיפה טכני בכלל**, הם תלויים בכך שהבונה מריץ את ה-skill ומכבד את ה-VERDICT. זה לא באג בעיצוב — זה מגבלה אמיתית של הפלטפורמה כרגע — אבל חשוב לדעת את זה לפני שמציגים את ה-Builder Flow כ"gate מלא" להנהלה.
 
+**הערה חשובה על B2/B3 בפועל (עודכן 2026-07-01):** ה-hook (`pre_tool_use_guard.py`) במקור בדק רק קריאות דרך כלי ה-`Bash` — כלומר בסשן Windows טהור שרץ דרך כלי `PowerShell` (ולא Git Bash), החסימה בפועל לא הייתה קיימת כלל, למרות שהטבלה סימנה "🔒 Hard". זה תוקן: ה-hook כולל כעת רגקסים מקבילים ל-PowerShell (`Get-Content`, `Remove-Item -Recurse -Force`, `Format-Volume` וכו'), אבל זה תלוי בכך ש-`project-settings.example.json` בפועל כולל את `PowerShell` ב-matcher של ה-`PreToolUse` hook (לא רק `Bash`) — לוודא את זה בכל פריסה חדשה.
+
 ---
 
 ## 3. Guardrails משותפים (Deny / Ask / Monitor)

@@ -26,7 +26,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash|mcp__*",
+        "matcher": "Bash|PowerShell|mcp__*",
         "hooks": [
           {
             "type": "command",
@@ -37,5 +37,9 @@
     ]
   },
 
-  "_comment_3": "Monitor tier (all shell execution, file writes, external API calls) is not a blocking mechanism — it's satisfied by the audit-logging skill + Claude Code's own session transcript. No settings.json entry needed; see docs/incident-response.md and keshet-builder-skills/audit-logging/SKILL.md for what must be logged and where."
+  "_comment_3": "Monitor tier (all shell execution, file writes, external API calls) is not a blocking mechanism — it's satisfied by the audit-logging skill + Claude Code's own session transcript. No settings.json entry needed; see docs/incident-response.md and keshet-builder-skills/audit-logging/SKILL.md for what must be logged and where.",
+
+  "_comment_4": "The matcher above MUST include 'PowerShell', not just 'Bash' -- Claude Code exposes a distinct PowerShell tool on native Windows sessions, and pre_tool_use_guard.py has separate pattern coverage for it. A matcher of 'Bash|mcp__*' alone silently never invokes this hook on Windows PowerShell tool calls, which defeats the guard entirely on this org's primary platform.",
+
+  "_comment_5": "The 'python3' command is a Linux/macOS convention -- stock Windows does not reliably have a 'python3' alias on PATH (only 'python' or the 'py' launcher, depending on how Python was installed). Before deploying to Windows Builder machines: verify 'python3 --version' resolves in the same shell Claude Code's hook subprocess uses, or replace this with the working interpreter invocation for your fleet (e.g. 'py -3 .claude/hooks/pre_tool_use_guard.py' or an absolute path to python.exe). Do not assume this line works as-is on a fresh Windows install -- test it first."
 }

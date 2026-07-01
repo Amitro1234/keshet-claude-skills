@@ -104,10 +104,11 @@ When a Builder is working on a project, track which step they are on:
 
 ## Cost Awareness
 
-- Haiku: $0.80/$4 per 1M tokens — use for all execution tasks
-- Sonnet: $3/$15 per 1M tokens — use for all reasoning tasks
-- Opus: $15/$75 per 1M tokens — use only for architecture, security audit, Prod gate
-- Prompt cache reads: 90% cheaper than non-cached — mark Spec Pack and CLAUDE.md for caching
+- Current per-model pricing lives in `claude-enterprise-skills/_shared/model-tiers.md` only — not repeated here, so this file can't drift out of sync with it (see the "Model Selection" section above for why)
+- Haiku (Tier 1) — use for all execution tasks
+- Sonnet (Tier 2) — use for all reasoning tasks
+- Opus (Tier 3) — use only for architecture, security audit, Prod gate
+- Prompt cache reads: ~90% cheaper than non-cached — mark Spec Pack and CLAUDE.md for caching
 - Batch API: 50% cheaper — route all non-interactive jobs there
 
 At end of every session over 30 minutes: offer to generate a `.claudeignore` and a session summary.
