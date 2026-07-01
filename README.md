@@ -1,7 +1,19 @@
 # keshet-claude-skills
 
-Official Claude Code skills library for the Keshet Vibe Coding platform.  
+Official Claude Code skills library for the Keshet Vibe Coding platform — FinOps guidance, Builder Flow quality gates, and enforceable guardrails.  
 Maintained by AI Architecture — Amit Rosen, CIO division.
+
+Most of this repo is **guidance** (markdown skills Claude reads and follows). The `enforcement/` folder is **executable policy** (hooks and settings Claude Code applies regardless of prompt text). See `docs/rules-policy.md` for the org rulebook that maps each requirement to its enforcement tier.
+
+---
+
+## Who should read what
+
+| Role | Start here |
+|---|---|
+| **Builder** | [Quick start](#quick-start-builder-setup) below — clone, install `global.CLAUDE.md`, start a project |
+| **Admin / FinOps / CISO** | `docs/rules-policy.md` (org policy, Hebrew) + `enforcement/README.md` (deploy hooks and settings) |
+| **Repo maintainer** | `docs/ADMIN_GUIDE.md` — full directory map, when to edit each file, troubleshooting |
 
 ---
 
@@ -10,10 +22,11 @@ Maintained by AI Architecture — Amit Rosen, CIO division.
 ```
 keshet-claude-skills/
 ├── claude-enterprise-skills/     ← FinOps: cost control, token optimization
+│   ├── _shared/model-tiers.md    ← single source of truth for model IDs and pricing
 │   ├── model-router-skill/       ← route tasks to cheapest capable model
 │   ├── context-hygiene/          ← prevent context bloat
 │   ├── output-discipline/        ← reduce output token waste
-│   ├── prompt-caching/           ← 90% discount on repeated context
+│   ├── prompt-caching/           ← 90% discount on repeated context (API/SDK only)
 │   ├── agentic-loop-guard/       ← prevent runaway agent spend
 │   └── batch-detector/           ← 50% discount via Batch API
 │
@@ -32,9 +45,20 @@ keshet-claude-skills/
 │
 ├── company-agent-guardrails/     ← Safety rules for all AI coding agents
 │
+├── enforcement/                  ← Real enforcement (hooks + permission configs)
+│   ├── managed-settings.example.json   ← org-wide locks (IT or admin console)
+│   ├── project-settings.example.json   ← per-repo defaults (Builder template)
+│   ├── hooks/pre_tool_use_guard.py     ← semantic PreToolUse hook
+│   └── tests/                          ← hook unit tests + behavioral scenarios
+│
 ├── docs/
+│   ├── ADMIN_GUIDE.md            ← operator guide (start here if you maintain the repo)
+│   ├── rules-policy.md           ← org rules: advisory vs hard enforcement (Hebrew)
 │   ├── approved-mcp-connectors.md ← authoritative list of approved MCP connectors
 │   └── incident-response.md      ← security incident response procedure (P1–P4)
+│
+├── tools/validate-skills.ps1     ← structural validator (also runs in CI)
+├── .github/workflows/            ← validate-skills.yml on PRs and pushes to main
 │
 └── templates/
     ├── global.CLAUDE.md          ← install once: ~/.claude/CLAUDE.md
@@ -77,6 +101,16 @@ cp ~/.claude/skills/keshet-claude-skills/templates/project.CLAUDE.md.template ./
 
 That's it. Claude Code picks up the skills automatically on the next session.
 
+### 4 — Enforcement (org admins)
+
+Skills guide behavior; `enforcement/` is what Claude Code actually blocks. For Builder machines:
+
+1. Copy `enforcement/project-settings.example.json` → `.claude/settings.json` in the org project template (Builder Flow Step 3).
+2. Copy `enforcement/hooks/pre_tool_use_guard.py` → `.claude/hooks/pre_tool_use_guard.py`.
+3. Deploy `enforcement/managed-settings.example.json` via IT tooling or the Claude admin console for org-wide locks (MCP allowlist, credential-path denies).
+
+Full deployment notes, tier model, and known bypasses: `enforcement/README.md`. Policy mapping (which rules are 🔒 Hard vs ⚠️ Advisory): `docs/rules-policy.md`.
+
 ---
 
 ## Skill execution order
@@ -104,6 +138,8 @@ That's it. Claude Code picks up the skills automatically on the next session.
 18. batch-detector     → any job with N>10 items that can wait
 ```
 
+Enforcement hooks and permission rules run at the tool-call layer (before Bash, Read, MCP, etc.) — see `enforcement/` — not in this numbered skill sequence.
+
 ---
 
 ## Builder Flow — skill mapping
@@ -124,8 +160,11 @@ That's it. Claude Code picks up the skills automatically on the next session.
 ## Updating skills
 
 1. Edit the relevant `SKILL.md`
-2. Open a PR — changes are picked up by Claude Code automatically on next session
-3. No reinstall needed (skills are loaded from path each session)
+2. Run `.\tools\validate-skills.ps1` locally (or rely on CI on the PR)
+3. Open a PR — changes are picked up by Claude Code automatically on next session
+4. No reinstall needed (skills are loaded from path each session)
+
+Model IDs and pricing: update `claude-enterprise-skills/_shared/model-tiers.md` only — do not hardcode prices in individual skills.
 
 ---
 
@@ -133,7 +172,9 @@ That's it. Claude Code picks up the skills automatically on the next session.
 
 - **CI validation:** `tools/validate-skills.ps1` runs automatically on every PR via `.github/workflows/validate-skills.yml` (GitHub-hosted `pwsh`). It can also be run locally — on Windows PowerShell 5.1 the script must stay UTF-8-with-BOM (it contains non-ASCII characters that PS 5.1 misreads under a non-UTF-8 ANSI codepage otherwise), or run it under `pwsh`.
 - **Incident response contacts:** `docs/incident-response.md` has placeholder `[fill in]` entries for CISO and Legal escalation contacts. These must be filled in before the document is useful in a real P1.
-- **Pricing freshness:** model cost figures in `model-router/SKILL.md` and `global.CLAUDE.md` are hardcoded. Review them quarterly alongside the Anthropic pricing page.
+- **Pricing freshness:** model IDs and cost figures live in `claude-enterprise-skills/_shared/model-tiers.md`. Review quarterly alongside the [Anthropic pricing page](https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions).
+- **MCP allowlist drift:** the approved connector list is maintained in `docs/approved-mcp-connectors.md`, `enforcement/managed-settings.example.json`, and `enforcement/hooks/pre_tool_use_guard.py` — all three must stay in sync when connectors change.
+- **Enforcement dry run:** hook unit tests pass via pytest, but managed/project settings have not yet been validated on a live Builder machine — see `enforcement/README.md` open items.
 
 ---
 
@@ -154,4 +195,4 @@ That's it. Claude Code picks up the skills automatically on the next session.
 
 Owner: Amit Rosen · Amit.Rosen@keshet-tv.com · AI Architecture, CIO division  
 Review cycle: Quarterly  
-Last updated: June 2026
+Last updated: July 2026
