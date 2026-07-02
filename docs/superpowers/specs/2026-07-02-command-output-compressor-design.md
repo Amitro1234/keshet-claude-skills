@@ -274,20 +274,27 @@ compression mechanism is working across Builder machines and where parsers
 need improvement — without collecting what any individual Builder is
 actually doing on their machine.
 
-Not designed or built now; two directions to evaluate when this becomes a
-priority:
+Not designed or built now. **Direction decided (2026-07-02, Amit):
+option 1 — Azure Application Insights — is the selected approach**,
+conditional on Phase 1 passing its gates. No self-hosted service is
+required: an App Insights resource (created once by the Azure subscription
+admin), each Builder machine POSTs events to the ingestion endpoint via a
+connection string (plain `urllib`, no SDK), dashboards via KQL/Workbooks
+in the Azure portal. Event volume at fleet scale is a few MB/month —
+ingestion cost is negligible. Option 2 kept below for the record only.
 
-1. **Azure Application Insights custom events** — lightweight `track_event`
-   calls via the REST ingestion API (no SDK dependency required, a plain
-   `urllib` POST is sufficient), aggregated centrally with existing
-   KQL/dashboard tooling. Fits the org's existing Azure footprint (already
-   referenced throughout `keshet-builder-skills/spec-pack/templates.md`
-   and the approved connector list).
-2. **Periodic Blob upload** — each Builder machine uploads its local
-   `compression-stats.jsonl` (or a rolled-up weekly summary) to an
-   isolated path in Azure Blob Storage. Requires a scoped ingestion token
-   per machine, not a shared write key, to avoid one leaked credential
-   granting write access for the whole fleet.
+1. **Azure Application Insights custom events (SELECTED)** — lightweight
+   `track_event` calls via the REST ingestion API (no SDK dependency
+   required, a plain `urllib` POST is sufficient), aggregated centrally
+   with existing KQL/dashboard tooling. Fits the org's existing Azure
+   footprint (already referenced throughout
+   `keshet-builder-skills/spec-pack/templates.md` and the approved
+   connector list).
+2. **Periodic Blob upload (not selected)** — each Builder machine uploads
+   its local `compression-stats.jsonl` (or a rolled-up weekly summary) to
+   an isolated path in Azure Blob Storage. Requires a scoped ingestion
+   token per machine, not a shared write key, to avoid one leaked
+   credential granting write access for the whole fleet.
 
 Both require an explicit decision on data ownership, retention period, and
 who has dashboard access — the same category of decision already gated by
