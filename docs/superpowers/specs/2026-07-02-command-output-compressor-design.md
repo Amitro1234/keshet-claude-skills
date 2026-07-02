@@ -165,8 +165,16 @@ The sink is an abstraction specifically so a future centralized sink
 
 Logged fields per event: timestamp, tool name, raw/compressed char counts,
 a rough token estimate (`len(text) // 4` — an English-biased heuristic,
-explicitly not presented as exact), and an `error` field when a parser
-threw.
+explicitly not presented as exact), a `parser_version` string (so Phase 2
+dashboards can distinguish "old parser failed" from "fixed parser works" —
+retrofitting this later would leave all historical data unattributable),
+and an `error` field when a parser threw.
+
+The hook also logs every invocation — including tool calls with no
+registered parser — so the report can answer "out of N total tool calls,
+how many were even candidates for compression?" Without that denominator,
+an admin sees only wins, never misses, and can't judge whether the
+mechanism is actually pulling its weight.
 
 `enforcement/compression/report.py` aggregates the local log into a
 per-session summary table (tool, calls, raw tokens, compressed tokens,
@@ -206,6 +214,16 @@ per-session summary table (tool, calls, raw tokens, compressed tokens,
   the local stats/report, not for any pricing or budget decision.
 - Stats logging is a single `jsonl` append per event — no blocking I/O
   beyond that.
+- **Input size ceiling:** output larger than 2MB goes straight to
+  passthrough without attempting any parser — closes the one scenario
+  where the hook itself could meaningfully slow a tool call (regex over a
+  giant log).
+- **Known cost to measure honestly:** Python interpreter startup itself
+  (tens of ms per invocation, worse on Windows) is likely the dominant
+  overhead, not the parsing. If measured overhead breaks the latency
+  budget below, the first mitigation is narrowing the hook's `matcher` in
+  settings.json (fire on `Bash` only instead of all tools), not
+  micro-optimizing parser code.
 
 ## Relationship to existing mechanisms
 
@@ -231,6 +249,23 @@ per-session summary table (tool, calls, raw tokens, compressed tokens,
 - `NOCOMPRESS` escape hatch (env var or command prefix, exact mechanism
   TBD in implementation plan) for cases where a Builder explicitly wants
   full raw output (e.g., compiling a complete test report).
+
+## Phase 1 success criteria
+
+Measured over at least one week of real Builder sessions (not synthetic
+tests), using the local stats log. Phase 2 investment is justified only if
+Phase 1 passes all four:
+
+| # | Criterion | Target | How measured |
+|---|---|---|---|
+| 1 | **Real savings** | ≥60% average char reduction on covered commands, AND covered commands account for a meaningful share of session tool-call volume (report shows the denominator) | `report.py` over a real week's `compression-stats.jsonl` |
+| 2 | **Latency** | Hook overhead ≤100ms p95 per invocation, end-to-end (including Python startup) | Timing wrapper in the hook itself, logged per event |
+| 3 | **Quality — zero information loss** | Zero observed cases where compressed output omitted a FAILED/ERROR/traceback line or a changed diff line; task-outcome parity on the golden-file benchmark tasks ("fix the failing test" gives the same result on raw vs. compressed) | Golden-file tests pre-ship + any real-usage incident counts as an automatic fail |
+| 4 | **Reliability** | Parser error rate <1% of invocations, and 100% of errors fail open (zero broken tool calls attributable to the hook) | `error` field counts in stats log |
+
+Criterion 3 is absolute: token savings with any information loss is a
+failed phase, not a trade-off. Criteria 1–2 are targets — if savings land
+at 50% or latency at 120ms, that's a judgment call, not an automatic kill.
 
 ## Phase 2 (roadmap only — not built in this pass)
 
