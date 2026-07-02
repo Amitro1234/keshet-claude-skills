@@ -94,6 +94,21 @@ def test_diff_not_a_diff_returns_none():
     assert git.compress_git_diff("nothing to see") is None
 
 
+def test_diff_context_line_starting_with_index_is_preserved():
+    raw = """diff --git a/calc.py b/calc.py
+index 1a2b3c4..5d6e7f8 100644
+--- a/calc.py
++++ b/calc.py
+@@ -1,3 +1,3 @@
+index = compute_index(rows)
+-total = index + 1
++total = index + 2
+"""
+    out = git.compress_git_diff(raw)
+    assert "index = compute_index(rows)" in out      # context line must survive
+    assert "index 1a2b3c4..5d6e7f8 100644" not in out  # real metadata still dropped
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_") and callable(fn):

@@ -24,6 +24,8 @@ _STATUS_NOISE_PREFIXES = (
 
 _COMMIT_RE = re.compile(r"^commit ([0-9a-f]{40})\b")
 
+_DIFF_INDEX_META_RE = re.compile(r"^index [0-9a-f]+\.\.[0-9a-f]+")
+
 
 def compress_git_status(raw: str) -> str | None:
     lines = raw.splitlines()
@@ -71,6 +73,7 @@ def compress_git_log(raw: str) -> str | None:
 def compress_git_diff(raw: str) -> str | None:
     if "diff --git" not in raw:
         return None
-    # Conservative by design: drop ONLY 'index ...' metadata lines.
-    kept = [l for l in raw.splitlines() if not l.startswith("index ")]
+    # Conservative by design: drop ONLY git's real 'index' metadata lines.
+    # Match only the canonical format (index abc123..def456 100644), never context lines.
+    kept = [l for l in raw.splitlines() if not _DIFF_INDEX_META_RE.match(l)]
     return "\n".join(kept)
