@@ -1,0 +1,29 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.0, pytest-9.0.3, pluggy-1.5.0
+rootdir: C:\repo
+collected 52 items
+
+tests/test_auth.py ..........................                            [ 50%]
+tests/test_events.py .................F.                                 [ 86%]
+tests/test_api.py ......F                                                [100%]
+
+================================== FAILURES ===================================
+_______________________ test_event_dedup_by_external_id _______________________
+
+    def test_event_dedup_by_external_id():
+        first = create_event(external_id="X1")
+>       assert create_event(external_id="X1") is None
+E       AssertionError: assert <Event id=2> is None
+
+tests/test_events.py:41: AssertionError
+______________________________ test_api_409_dup _______________________________
+
+    def test_api_409_dup():
+>       assert resp.status_code == 409
+E       assert 201 == 409
+
+tests/test_api.py:88: assert
+=========================== short test summary info ===========================
+FAILED tests/test_events.py::test_event_dedup_by_external_id - AssertionError
+FAILED tests/test_api.py::test_api_409_dup - assert 201 == 409
+========================= 2 failed, 50 passed in 4.12s ========================
