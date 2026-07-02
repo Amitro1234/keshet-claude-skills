@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Unit tests for the git output parsers. Parsers are pure functions:
 str -> compressed str, or None meaning 'not confident, pass through'."""
+import re
 import sys
 from pathlib import Path
 
@@ -92,6 +93,19 @@ def test_diff_preserves_all_change_lines():
 
 def test_diff_not_a_diff_returns_none():
     assert git.compress_git_diff("nothing to see") is None
+
+
+GOLDEN_DIFF = (Path(__file__).parent / "fixtures" / "git_diff_multifile_raw.txt").read_text(encoding="utf-8")
+
+
+def test_diff_golden_multifile_no_content_line_lost():
+    out = git.compress_git_diff(GOLDEN_DIFF)
+    assert out is not None
+    out_lines = set(out.splitlines())
+    for line in GOLDEN_DIFF.splitlines():
+        if re.match(r"^index [0-9a-f]+\.\.[0-9a-f]+", line):
+            continue  # the ONLY thing the parser may drop
+        assert line in out_lines, f"CONTENT LINE LOST: {line!r}"
 
 
 def test_diff_context_line_starting_with_index_is_preserved():

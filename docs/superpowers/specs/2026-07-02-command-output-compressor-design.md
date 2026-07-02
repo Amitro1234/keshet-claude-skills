@@ -297,5 +297,6 @@ who has dashboard access — the same category of decision already gated by
 
 - Exact `NOCOMPRESS` mechanism (env var vs. command prefix)
 - Where `.claude/settings.json`'s opt-in flag is documented for Builders
-- Whether `report.py` needs a `--since` / session-scoping option, or
-  whether reading the whole local log file is sufficient for MVP
+- ~~Whether `report.py` needs a `--since` / session-scoping option, or
+  whether reading the whole local log file is sufficient for MVP~~ **RESOLVED:** no
+  time filter in MVP; delete/rotate the stats file to reset measurement.

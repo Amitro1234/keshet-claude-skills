@@ -23,6 +23,13 @@ CASES = [
     ("Bash", "echo pytest is great", None),           # 'pytest' not as a command word...
     ("Read", "git status", None),                     # wrong tool
     ("PowerShell", "git status", None),               # MVP is Bash-matcher only
+    ("Bash", "FOO=1 pytest -v", "pytest"),
+    ("Bash", "uv run pytest tests/", "pytest"),
+    ("Bash", "poetry run pytest", "pytest"),
+    ("Bash", "python3.11 -m pytest tests/", "pytest"),
+    ("Bash", "git -C some/path status", "git-status"),
+    ("Bash", "git --no-pager diff HEAD~1", "git-diff"),
+    ("Bash", "echo FOO=1 && echo pytest", None),
 ]
 
 

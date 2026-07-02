@@ -1,0 +1,84 @@
+diff --git a/.gitignore b/.gitignore
+index f417185..de39186 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -26,3 +26,6 @@ __pycache__/
+ 
+ # Logs
+ *.log
++
++# per-machine compression stats (see enforcement/compression/stats.py)
++.claude/compression-stats.jsonl
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 7c2f66b..f7a69d7 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -9,6 +9,19 @@ Owner: AI Architecture (Amit Rosen, CIO division)
+ 
+ ## [Unreleased] — July 2026
+ 
++### Added
++
++- `enforcement/hooks/post_tool_use_compressor.py` + `enforcement/compression/` —
++  opt-in PostToolUse hook that compresses verbose Bash output (git
++  status/diff/log, pytest, npm test, eslint, ruff) before it enters
++  Claude's context. Python stdlib only, absolute fail-open, per-event
++  stats to `.claude/compression-stats.jsonl` (with parser_version and a
++  full-invocation denominator), `report.py` savings summary,
++  NOCOMPRESS/`KESHET_NOCOMPRESS` escape hatches, 2MB input ceiling, and
++  golden-file tests asserting zero information loss on failure output.
++  Design + Phase 1 success gates:
++  `docs/superpowers/specs/2026-07-02-command-output-compressor-design.md`.
++
+ ### Changed (skill-authoring quality pass, per the "Superpowers" skill-writing methodology)
+ 
+ - Fixed `name:` frontmatter mismatches in 12 files — every `keshet-builder-skills/*`
+diff --git a/enforcement/README.md b/enforcement/README.md
+index 161b921..1e2bd4b 100644
+--- a/enforcement/README.md
++++ b/enforcement/README.md
+@@ -31,6 +31,8 @@ Verified against Claude Code's hooks and permissions docs:
+ - `managed-settings.example.json` — deploy via IT tooling (any plan) or Claude admin console (Team+). Locks the MCP allowlist and the hard security denies org-wide.
+ - `project-settings.example.json` — ship this as the default `.claude/settings.json` in the org repo template (Builder Flow Step 3), covers the "Ask" tier (git push, deploys, installs, migrations) plus wires in the hook below.
+ - `hooks/pre_tool_use_guard.py` — the semantic hook referenced from `project-settings.example.json`. Copy to `.claude/hooks/pre_tool_use_guard.py` in the org template repo.
++- `hooks/post_tool_use_compressor.py` — PostToolUse hook that compresses verbose Bash output (git status/diff/log, pytest, npm test, eslint, ruff) before it enters Claude's context. Fail-open: any parser error means untouched passthrough, never altered output. Opt-in per project via the PostToolUse block in `project-settings.example.json`. Design: `docs/superpowers/specs/2026-07-02-command-output-compressor-design.md`.
++- `compression/` — the parser package behind the hook above (`dispatch.py` routing, `formats/` parsers, `stats.py` local JSONL logging, `report.py` savings report, `tests/` incl. golden-file no-information-loss tests). Deploy alongside the hook: copy to `.claude/compression/`.
+ - `tests/test_pre_tool_use_guard.py` — real, automated, repeatable tests for the hook above (33 cases, including PowerShell-tool coverage and the broadened `rm -rf` destructive-target checks; run with `python3 tests/test_pre_tool_use_guard.py` or via pytest). Includes one intentional `xfail` documenting a known bypass (obfuscated `.env` reads via inline Python) rather than hiding it. **Run this after every edit to the hook or to `docs/approved-mcp-connectors.md`.**
+ - `tests/behavioral-scenarios.md` — the non-executable counterpart: scenario tests for skills that are advisory-only (no hook/settings.json backing). 3 scenarios validated 2026-07-01 (security-secret-catch, spec-pack-gate, model-router+connector-block — all passed), 4 more scaffolded for the next pass.
+ 
+@@ -39,3 +41,4 @@ Verified against Claude Code's hooks and permissions docs:
+ 1. **MCP allowlist duplication risk:** the approved-connector list is now hand-maintained in three places — `docs/approved-mcp-connectors.md` (source of truth), `managed-settings.example.json`, and `pre_tool_use_guard.py`. If one is updated and the others aren't, they drift silently. Worth writing a small script that generates the JSON/Python list from the markdown table so there's one source of truth — flagging this rather than building it now, since it's a repo-tooling decision, not a policy one.
+ 2. **Schema verification:** the exact hook stdin JSON shape and the managed-settings key names were verified against Claude Code docs as of 2026-07-01 but this is an area that changes; confirm against `https://code.claude.com/docs/en/hooks` and `https://code.claude.com/docs/en/admin-setup` before deploying to real Builder machines, and definitely before deploying the managed tier (a typo'd key there could silently do nothing rather than error).
+ 3. **The hook itself is now unit-tested (`tests/test_pre_tool_use_guard.py`, 33/33 passing) and 3 of the advisory skills have been behaviorally validated (`tests/behavioral-scenarios.md`)** — but none of this has run inside a real Claude Code CLI session on an actual Builder machine yet, only via direct subprocess calls and simulated sessions. Recommend a dry run on one Builder machine (`.claude/settings.json` only, no managed tier yet) before wider rollout. **This is doubly important on Windows**: `project-settings.example.json`'s hook command (`python3 ...`) assumes a `python3` alias that stock Windows doesn't ship by default — verify the interpreter invocation resolves on an actual Windows Builder machine before rollout, not just that the JSON schema is valid (see `_comment_5` in that file).
++4. **Compressor Phase 1 gates not yet measured on a real machine:** the spec defines four success criteria (≥60% savings on covered commands, ≤100ms p95 hook overhead including Python startup, zero information loss, <1% parser error rate). The golden-file tests cover criterion 3 structurally; criteria 1, 2, and 4 need a week of real Builder-session stats (`python enforcement/compression/report.py`) before org-wide rollout. **⚠ Initial latency baseline (2026-07-02, Windows 11, CPython, pytest fixture input): p50≈967ms, p95≈1604ms — both exceed the 100ms criterion.** The overhead is Python process startup on Windows, not parser work. First mitigation to evaluate per the spec: **narrow the matcher** — replace `"Bash"` with a more specific pattern covering only the commands that generate verbose output (e.g. `git`, `pytest`, `npm test`, `eslint`, `ruff`) so the hook fires far less often. Do not start with parser micro-optimization.
+diff --git a/enforcement/project-settings.example.json b/enforcement/project-settings.example.json
+index 16c3ffd..cee6ab8 100644
+--- a/enforcement/project-settings.example.json
++++ b/enforcement/project-settings.example.json
+@@ -34,6 +34,17 @@
+           }
+         ]
+       }
++    ],
++    "PostToolUse": [
++      {
++        "matcher": "Bash",
++        "hooks": [
++          {
++            "type": "command",
++            "command": "python3 .claude/hooks/post_tool_use_compressor.py"
++          }
++        ]
++      }
+     ]
+   },
+ 
+@@ -41,5 +52,7 @@
+ 
+   "_comment_4": "The matcher above MUST include 'PowerShell', not just 'Bash' -- Claude Code exposes a distinct PowerShell tool on native Windows sessions, and pre_tool_use_guard.py has separate pattern coverage for it. A matcher of 'Bash|mcp__*' alone silently never invokes this hook on Windows PowerShell tool calls, which defeats the guard entirely on this org's primary platform.",
+ 
+-  "_comment_5": "The 'python3' command is a Linux/macOS convention -- stock Windows does not reliably have a 'python3' alias on PATH (only 'python' or the 'py' launcher, depending on how Python was installed). Before deploying to Windows Builder machines: verify 'python3 --version' resolves in the same shell Claude Code's hook subprocess uses, or replace this with the working interpreter invocation for your fleet (e.g. 'py -3 .claude/hooks/pre_tool_use_guard.py' or an absolute path to python.exe). Do not assume this line works as-is on a fresh Windows install -- test it first."
++  "_comment_5": "The 'python3' command is a Linux/macOS convention -- stock Windows does not reliably have a 'python3' alias on PATH (only 'python' or the 'py' launcher, depending on how Python was installed). Before deploying to Windows Builder machines: verify 'python3 --version' resolves in the same shell Claude Code's hook subprocess uses, or replace this with the working interpreter invocation for your fleet (e.g. 'py -3 .claude/hooks/pre_tool_use_guard.py' or an absolute path to python.exe). Do not assume this line works as-is on a fresh Windows install -- test it first.",
++
++  "_comment_6": "The PostToolUse compressor (post_tool_use_compressor.py + the .claude/compression/ package, both copied from enforcement/) is OPT-IN per project: shipping this settings block IS the opt-in. Matcher is 'Bash' only by design — all MVP parsers are Bash-command parsers, and a narrower matcher means fewer Python startups (latency). Same python3-on-Windows caveat as _comment_5 applies. To disable per-command: include the word NOCOMPRESS in the command. To disable machine-wide: set KESHET_NOCOMPRESS=1."
+ }
