@@ -91,8 +91,9 @@ def test_no_gain_passthrough():
 
 
 def test_malformed_stdin_fails_open():
-    code, out, _ = run_hook("this is not json {{{")
+    code, out, events = run_hook("this is not json {{{")
     assert code == 0 and out == ""
+    assert len(events) == 1 and events[0]["skipped"] == "malformed_stdin"
 
 
 def test_string_tool_response_also_works():
@@ -101,6 +102,20 @@ def test_string_tool_response_also_works():
     code, out, events = run_hook(payload)
     assert code == 0
     assert json.loads(out)["hookSpecificOutput"]["updatedToolOutput"]
+
+
+def test_unicode_in_compressed_output_roundtrips():
+    raw = ("============================= test session starts =============================\n"
+           "collected 2 items\n\ntests/test_a.py .F  [100%]\n\n"
+           "================================== FAILURES ===================================\n"
+           "___________________________ test_hebrew_handling ______________________________\n"
+           "E       AssertionError: assert 'שלום' == 'עולם'\n"
+           "tests/test_a.py:7: AssertionError\n"
+           "========================= 1 failed, 1 passed in 0.10s =========================\n")
+    code, out, events = run_hook(bash_event("pytest -v", raw))
+    assert code == 0
+    compressed = json.loads(out)["hookSpecificOutput"]["updatedToolOutput"]
+    assert "'שלום' == 'עולם'" in compressed  # json.loads decodes \uXXXX back to the original
 
 
 if __name__ == "__main__":

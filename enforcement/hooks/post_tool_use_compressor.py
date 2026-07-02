@@ -54,7 +54,13 @@ def main() -> None:
     try:
         payload = json.load(sys.stdin)
     except (json.JSONDecodeError, UnicodeDecodeError):
-        sys.exit(0)  # fail open; nothing sane to log
+        # Fail open, but still leave one observability event (the sink's
+        # write is itself fail-open, so this cannot raise).
+        sink.write(stats.make_event(
+            "", None, None, 0, 0,
+            round((time.perf_counter() - start) * 1000, 2),
+            skipped="malformed_stdin"))
+        sys.exit(0)
 
     tool_name = payload.get("tool_name", "")
     tool_input = payload.get("tool_input") or {}
@@ -101,16 +107,27 @@ def main() -> None:
         log(kind=kind, version=version, skipped="no_gain")
         sys.exit(0)
 
-    log(kind=kind, version=version, compressed_chars=len(compressed))
-    sys.stdout.reconfigure(encoding="utf-8")  # Windows console safety for ✓/✕/Hebrew
-    print(json.dumps({
+    out_json = json.dumps({
         "hookSpecificOutput": {
             "hookEventName": "PostToolUse",
             "updatedToolOutput": compressed,
         }
-    }, ensure_ascii=False))
+    }, ensure_ascii=True)  # ASCII-only JSON: valid on ANY console/pipe encoding
+    try:
+        print(out_json)
+    except Exception as e:
+        log(kind=kind, version=version, error=f"emit_failed: {type(e).__name__}")
+        sys.exit(0)
+    log(kind=kind, version=version, compressed_chars=len(compressed))
     sys.exit(0)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SystemExit:
+        raise
+    except BaseException:
+        # Absolute fail-open: NO failure of this hook may ever block or
+        # alter the tool call it observes.
+        sys.exit(0)
