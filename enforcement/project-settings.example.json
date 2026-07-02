@@ -34,6 +34,17 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/post_tool_use_compressor.py"
+          }
+        ]
+      }
     ]
   },
 
@@ -41,5 +52,7 @@
 
   "_comment_4": "The matcher above MUST include 'PowerShell', not just 'Bash' -- Claude Code exposes a distinct PowerShell tool on native Windows sessions, and pre_tool_use_guard.py has separate pattern coverage for it. A matcher of 'Bash|mcp__*' alone silently never invokes this hook on Windows PowerShell tool calls, which defeats the guard entirely on this org's primary platform.",
 
-  "_comment_5": "The 'python3' command is a Linux/macOS convention -- stock Windows does not reliably have a 'python3' alias on PATH (only 'python' or the 'py' launcher, depending on how Python was installed). Before deploying to Windows Builder machines: verify 'python3 --version' resolves in the same shell Claude Code's hook subprocess uses, or replace this with the working interpreter invocation for your fleet (e.g. 'py -3 .claude/hooks/pre_tool_use_guard.py' or an absolute path to python.exe). Do not assume this line works as-is on a fresh Windows install -- test it first."
+  "_comment_5": "The 'python3' command is a Linux/macOS convention -- stock Windows does not reliably have a 'python3' alias on PATH (only 'python' or the 'py' launcher, depending on how Python was installed). Before deploying to Windows Builder machines: verify 'python3 --version' resolves in the same shell Claude Code's hook subprocess uses, or replace this with the working interpreter invocation for your fleet (e.g. 'py -3 .claude/hooks/pre_tool_use_guard.py' or an absolute path to python.exe). Do not assume this line works as-is on a fresh Windows install -- test it first.",
+
+  "_comment_6": "The PostToolUse compressor (post_tool_use_compressor.py + the .claude/compression/ package, both copied from enforcement/) is OPT-IN per project: shipping this settings block IS the opt-in. Matcher is 'Bash' only by design — all MVP parsers are Bash-command parsers, and a narrower matcher means fewer Python startups (latency). Same python3-on-Windows caveat as _comment_5 applies. To disable per-command: include the word NOCOMPRESS in the command. To disable machine-wide: set KESHET_NOCOMPRESS=1."
 }

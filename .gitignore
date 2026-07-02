@@ -26,3 +26,6 @@ __pycache__/
 
 # Logs
 *.log
+
+# per-machine compression stats (see enforcement/compression/stats.py)
+.claude/compression-stats.jsonl

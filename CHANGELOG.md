@@ -9,6 +9,19 @@ Owner: AI Architecture (Amit Rosen, CIO division)
 
 ## [Unreleased] — July 2026
 
+### Added
+
+- `enforcement/hooks/post_tool_use_compressor.py` + `enforcement/compression/` —
+  opt-in PostToolUse hook that compresses verbose Bash output (git
+  status/diff/log, pytest, npm test, eslint, ruff) before it enters
+  Claude's context. Python stdlib only, absolute fail-open, per-event
+  stats to `.claude/compression-stats.jsonl` (with parser_version and a
+  full-invocation denominator), `report.py` savings summary,
+  NOCOMPRESS/`KESHET_NOCOMPRESS` escape hatches, 2MB input ceiling, and
+  golden-file tests asserting zero information loss on failure output.
+  Design + Phase 1 success gates:
+  `docs/superpowers/specs/2026-07-02-command-output-compressor-design.md`.
+
 ### Changed (skill-authoring quality pass, per the "Superpowers" skill-writing methodology)
 
 - Fixed `name:` frontmatter mismatches in 12 files — every `keshet-builder-skills/*`
