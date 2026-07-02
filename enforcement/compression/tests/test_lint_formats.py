@@ -52,6 +52,27 @@ def test_ruff_unrecognized_returns_none():
     assert lint.compress_ruff("bash: ruff: command not found") is None
 
 
+def test_ruff_path_with_spaces_survives():
+    raw = "src/my component/api.py:12:5: F841 Local variable `resp` is unused\nFound 1 error.\n"
+    out = lint.compress_ruff(raw)
+    assert out is not None
+    assert "src/my component/api.py:12:5: F841" in out
+
+
+def test_ruff_parse_error_context_block_survives():
+    raw = """src/api.py:1:9: E999 SyntaxError: invalid syntax
+  |
+1 | def foo(:
+  |         ^ SyntaxError
+  |
+Found 1 error.
+"""
+    out = lint.compress_ruff(raw)
+    assert out is not None
+    assert "1 | def foo(:" in out
+    assert "^ SyntaxError" in out
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_") and callable(fn):

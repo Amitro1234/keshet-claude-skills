@@ -10,8 +10,9 @@ import re
 PARSER_VERSION = "1.0.0"
 
 _ESLINT_LOC_RE = re.compile(r"^\s+\d+:\d+\s+(error|warning)")
-_RUFF_VIOLATION_RE = re.compile(r"^\S+:\d+:\d+: \w+")
+_RUFF_VIOLATION_RE = re.compile(r"^.+?:\d+:\d+: \w+")
 _RUFF_SUMMARY_RE = re.compile(r"^Found \d+ error")
+_RUFF_NOISE_RE = re.compile(r"^warning: |^\[\*\] ")
 
 
 def compress_eslint(raw: str) -> str | None:
@@ -23,8 +24,12 @@ def compress_eslint(raw: str) -> str | None:
 
 def compress_ruff(raw: str) -> str | None:
     lines = raw.splitlines()
-    violations = [l for l in lines if _RUFF_VIOLATION_RE.match(l)]
-    summary = [l for l in lines if _RUFF_SUMMARY_RE.match(l)]
-    if not violations and not summary:
+    has_violation = any(_RUFF_VIOLATION_RE.match(l) for l in lines)
+    has_summary = any(_RUFF_SUMMARY_RE.match(l) for l in lines)
+    if not has_violation and not has_summary:
         return None
-    return "\n".join(violations + summary)
+    # Conservative: drop only proven noise (deprecation banners, fix hints,
+    # blank lines); keep everything else — incl. multi-line parse-error
+    # context blocks, which are diagnostic payload, not decoration.
+    kept = [l.rstrip() for l in lines if l.strip() and not _RUFF_NOISE_RE.match(l)]
+    return "\n".join(kept)
