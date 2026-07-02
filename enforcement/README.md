@@ -52,7 +52,22 @@ blocker:
    admin rights, no PATH changes) can be dropped into `.claude/runtime/`
    and the hook command pointed at `.claude/runtime/python.exe`. Removes
    the installation dependency entirely while keeping the existing code
-   and tests; latency profile unchanged.
+   and tests.
+   **Validated 2026-07-02** with a self-built portable copy (the corporate
+   proxy blocks the python.org zip — IT will need to whitelist or mirror
+   it for real distribution; the interim recipe that produced identical
+   results: copy `python.exe`, `python3.dll`, `python312.dll`,
+   `vcruntime140*.dll`, `DLLs\`, and `Lib\` **excluding site-packages**
+   from an existing install — 70 MB vs ~1 GB installed): hook runs
+   end-to-end, all 9 integration tests + all 33 guard tests pass on the
+   portable runtime, and bare-startup latency measured ~1.0-1.5s — at or
+   below the installed interpreter, even though `.claude\runtime\` is NOT
+   in the Trend Real-Time exclusion (caveat: AV verdict cache was warm
+   from the copy itself; re-measure after a reboot before quoting these
+   numbers). If this becomes the deployment mechanism, ask security to
+   extend the Real-Time exclusion to the deployed `.claude\runtime\` path.
+   The runtime directory is gitignored — it's a deploy artifact, never
+   repo content.
 2. **Use what Windows already has (rewrite to PowerShell):** zero install
    on the org's primary platform, but `powershell.exe` startup (-NoProfile
    still pays .NET init + the same EDR process tax) is typically no faster

@@ -29,3 +29,6 @@ __pycache__/
 
 # per-machine compression stats (see enforcement/compression/stats.py)
 .claude/compression-stats.jsonl
+
+# portable Python runtime experiment (70MB of binaries — never commit; see enforcement/README.md runtime section)
+.claude/runtime/
