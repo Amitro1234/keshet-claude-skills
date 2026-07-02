@@ -9,20 +9,25 @@ required actions on their own.
 
 ## Message templates
 
-### Session opening declaration
+### Session opening declaration (mode-based, per SKILL.md Step 1)
 
 ```
-Agent session starting.
+Agent session starting. Mode: [interactive-solo | orchestrated | unattended]
 Task: [description]
-Estimated steps: ~[N] tool calls
-Hard stop: 50 tool calls or user interrupt
-Checkpoint: every 10 tool calls
+Estimated: ~[N] tool calls, ~[M] subagents, ~[T]K tokens
+Checkpoints: [every 10 calls | at each structural gate: <name them>]
+Hard stop: [50 calls | 2x declared estimate] or user interrupt
 ```
 
-### Checkpoint (every 10 tool calls)
+For orchestrated mode, the named structural gates replace the fixed
+10-call cadence — e.g. "checkpoint after each task's review completes."
+A checkpoint in orchestrated mode reports and continues (the user can
+interrupt); it does not block awaiting approval.
+
+### Checkpoint (solo: every 10 tool calls, blocking / orchestrated: per gate, non-blocking)
 
 ```
-=== Agent Checkpoint (tool calls: [N]/50) ===
+=== Agent Checkpoint (tool calls: [N]/[ceiling]) ===
 Completed: [bullet list of what was done]
 Next step: [single next action]
 Estimated remaining: ~[M] more tool calls

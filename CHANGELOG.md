@@ -22,6 +22,18 @@ Owner: AI Architecture (Amit Rosen, CIO division)
   Design + Phase 1 success gates:
   `docs/superpowers/specs/2026-07-02-command-output-compressor-design.md`.
 
+### Changed
+
+- `claude-enterprise-skills/agentic-loop-guard/SKILL.md` — redesigned from
+  fixed limits to declaration-scaled, mode-based limits (interactive-solo /
+  orchestrated / unattended), after a live audit of a real ~900K-token,
+  23-subagent orchestrated session showed the fixed rules ("stop and await
+  approval every 10 calls", flat 5-subagent cap) were built for unsupervised
+  solo loops and actively hurt legitimate plan-driven multi-agent work.
+  Orchestrated mode: checkpoints at named structural gates (report, don't
+  block), ceilings at 2x the session's own declared estimates. Audit
+  recorded as Scenario 8 in `enforcement/tests/behavioral-scenarios.md`.
+
 ### Changed (skill-authoring quality pass, per the "Superpowers" skill-writing methodology)
 
 - Fixed `name:` frontmatter mismatches in 12 files — every `keshet-builder-skills/*`
