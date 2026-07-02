@@ -64,10 +64,20 @@ blocker:
    below the installed interpreter, even though `.claude\runtime\` is NOT
    in the Trend Real-Time exclusion (caveat: AV verdict cache was warm
    from the copy itself; re-measure after a reboot before quoting these
-   numbers). If this becomes the deployment mechanism, ask security to
-   extend the Real-Time exclusion to the deployed `.claude\runtime\` path.
-   The runtime directory is gitignored — it's a deploy artifact, never
-   repo content.
+   numbers). The runtime directory is gitignored — it's a deploy artifact,
+   never repo content.
+   **Security hardening — do NOT combine user-writable + EDR-excluded:**
+   a runtime under a user-writable project path (`.claude\runtime\`) that
+   is ALSO excluded from real-time scanning would be an ideal malware
+   hiding spot (drop a payload where the scanner doesn't look, run it via
+   a trusted interpreter). For production: deploy the runtime ONCE per
+   machine to an admin-writable location (e.g.
+   `C:\Program Files\Keshet\claude-runtime\`) via IT tooling, point every
+   project's hook command at that shared path, and scope any EDR exclusion
+   there — readable by all, writable by none. Distribution must be built
+   from the hash-verified official python.org embeddable zip through the
+   same trusted IT channel as `managed-settings.json`, never copied
+   machine-to-machine.
 2. **Use what Windows already has (rewrite to PowerShell):** zero install
    on the org's primary platform, but `powershell.exe` startup (-NoProfile
    still pays .NET init + the same EDR process tax) is typically no faster
