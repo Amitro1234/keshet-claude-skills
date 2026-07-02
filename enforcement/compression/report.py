@@ -25,9 +25,11 @@ def load(path):
         if not line:
             continue
         try:
-            events.append(json.loads(line))
+            obj = json.loads(line)
         except json.JSONDecodeError:
             continue  # a torn/corrupt line shouldn't kill the report
+        if isinstance(obj, dict):
+            events.append(obj)
     return events
 
 
@@ -61,15 +63,16 @@ def main():
         print("No parser-matched events yet.")
         return
     print(f"\n{'Kind':<12}{'Calls':>7}{'Raw tok':>10}{'Comp tok':>10}{'Saved':>8}{'Errors':>8}")
-    t_raw = t_comp = 0
+    t_raw = t_comp = t_errors = 0
     for kind in sorted(per_kind):
         r = per_kind[kind]
-        saved = f"-{100 * (1 - r['comp'] / r['raw']):.0f}%" if r["raw"] else "n/a"
+        saved = f"{-100 * (1 - r['comp'] / r['raw']):+.0f}%" if r["raw"] else "n/a"
         print(f"{kind:<12}{r['calls']:>7}{r['raw']:>10}{r['comp']:>10}{saved:>8}{r['errors']:>8}")
         t_raw += r["raw"]
         t_comp += r["comp"]
-    total_saved = f"-{100 * (1 - t_comp / t_raw):.0f}%" if t_raw else "n/a"
-    print(f"{'TOTAL':<12}{'':>7}{t_raw:>10}{t_comp:>10}{total_saved:>8}")
+        t_errors += r["errors"]
+    total_saved = f"{-100 * (1 - t_comp / t_raw):+.0f}%" if t_raw else "n/a"
+    print(f"{'TOTAL':<12}{'':>7}{t_raw:>10}{t_comp:>10}{total_saved:>8}{t_errors:>8}")
     if skips:
         print("\nSkip reasons: " + ", ".join(f"{k}={v}" for k, v in sorted(skips.items())))
 
