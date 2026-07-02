@@ -36,6 +36,39 @@ Verified against Claude Code's hooks and permissions docs:
 - `tests/test_pre_tool_use_guard.py` — real, automated, repeatable tests for the hook above (33 cases, including PowerShell-tool coverage and the broadened `rm -rf` destructive-target checks; run with `python3 tests/test_pre_tool_use_guard.py` or via pytest). Includes one intentional `xfail` documenting a known bypass (obfuscated `.env` reads via inline Python) rather than hiding it. **Run this after every edit to the hook or to `docs/approved-mcp-connectors.md`.**
 - `tests/behavioral-scenarios.md` — the non-executable counterpart: scenario tests for skills that are advisory-only (no hook/settings.json backing). 3 scenarios validated 2026-07-01 (security-secret-catch, spec-pack-gate, model-router+connector-block — all passed), 4 more scaffolded for the next pass.
 
+## Runtime prerequisite on Builder machines
+
+Both hooks (`pre_tool_use_guard.py`, `post_tool_use_compressor.py`) run on
+Python — meaning **every Builder machine needs a Python interpreter
+installed, regardless of what language the Builder's own project uses** (a
+C#/Node Builder still needs Python for the enforcement layer). Add this to
+the Builder Flow Step 2 (Local environment) checklist.
+
+Three ways to remove or soften that dependency, if it becomes a rollout
+blocker:
+
+1. **Ship the runtime with the artifact (no rewrite):** Python's official
+   "embeddable package" for Windows (~15 MB of files, no installer, no
+   admin rights, no PATH changes) can be dropped into `.claude/runtime/`
+   and the hook command pointed at `.claude/runtime/python.exe`. Removes
+   the installation dependency entirely while keeping the existing code
+   and tests; latency profile unchanged.
+2. **Use what Windows already has (rewrite to PowerShell):** zero install
+   on the org's primary platform, but `powershell.exe` startup (-NoProfile
+   still pays .NET init + the same EDR process tax) is typically no faster
+   than Python here, PS 5.1 quirks apply, and all parser code + tests
+   would need porting. Weakest option.
+3. **Compiled static binary (Go/Rust):** one self-contained .exe, no
+   runtime at all — the cleanest "works regardless of installed languages"
+   answer, already discussed under open item 4. Pays the build-pipeline,
+   signing, and code-transparency costs listed there, and still sits on
+   the ~1s per-process floor this machine showed.
+
+Recommendation: option 1 (embeddable runtime) is the cheap, immediate
+answer to "generic across Builder machines" — it turns deployment into
+pure file-copy with zero prerequisites and postpones the binary question
+until Phase 1 data justifies it.
+
 ## Open items before this is production-ready
 
 1. **MCP allowlist duplication risk:** the approved-connector list is now hand-maintained in three places — `docs/approved-mcp-connectors.md` (source of truth), `managed-settings.example.json`, and `pre_tool_use_guard.py`. If one is updated and the others aren't, they drift silently. Worth writing a small script that generates the JSON/Python list from the markdown table so there's one source of truth — flagging this rather than building it now, since it's a repo-tooling decision, not a policy one.
