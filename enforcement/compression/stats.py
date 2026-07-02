@@ -35,8 +35,9 @@ class LocalFileSink(StatsSink):
             self.path.parent.mkdir(parents=True, exist_ok=True)
             with open(self.path, "a", encoding="utf-8") as f:
                 f.write(json.dumps(event, ensure_ascii=False) + "\n")
-        except OSError:
-            # Stats must never break the hook. Losing one event is fine.
+        except Exception:
+            # Stats writes are fully fail-open. Losing one event is always better
+            # than breaking the hook — including TypeError from non-serializable values.
             pass
 
 
